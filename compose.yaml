@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17.4
+    container_name: postgres_es_cqrs
+    restart: always
+    ports:
+      - 5435:5432
+    volumes:
+      - postgres_data_es_cqrs:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+
+volumes:
+  postgres_data_es_cqrs:
