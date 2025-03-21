@@ -8,7 +8,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// generator classes {
+//   provider = "prisma-class-generator"
+//   output   = "../src/generated/entities"
+//   dryRun   = false
+// }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Event {
+  id           String   @id @default(uuid())
+  revision     Int
+  agent        String
+  type         String
+  timeObserved DateTime @map("time_observed")
+  timeOccurred DateTime @map("time_occurred")
+  data         Json
+
+  @@map("events")
 }
