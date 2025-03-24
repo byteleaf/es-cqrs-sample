@@ -19,13 +19,23 @@ datasource db {
 }
 
 model Event {
-  id           String   @id @default(uuid())
-  revision     Int
-  agent        String
-  type         String
-  timeObserved DateTime @map("time_observed")
-  timeOccurred DateTime @map("time_occurred")
-  data         Json
+  id                String   @id @default(uuid())
+  aggregateId       String   @default(uuid()) @map("aggregate_id")
+  aggregateRevision Int      @map("aggregate_revision")
+  type              String
+  timeObserved      DateTime @map("time_observed")
+  timeOccurred      DateTime @map("time_occurred")
+  data              Json
 
   @@map("events")
+}
+
+model Book {
+  id        String   @id @default(uuid())
+  title     String
+  author    String
+  status    String // 'available' | 'borrowed' | 'repaired' | 'removed'
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("books")
 }
