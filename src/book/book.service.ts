@@ -32,13 +32,11 @@ export class BookService {
   }
 
   private async recordAndApply(bookEvent: BookEvent) {
-    const events = await this.eventStore.getEventsByAggregateId(
-      bookEvent.bookId,
-    );
+    const count = await this.eventStore.getCountByAggregateId(bookEvent.bookId);
 
     const event: Prisma.EventCreateInput = {
       aggregateId: bookEvent.bookId,
-      aggregateRevision: events.length + 1,
+      aggregateRevision: count + 1,
       type: bookEvent.type,
       timeObserved: new Date(), // TODO: get from request
       timeOccurred: new Date(),

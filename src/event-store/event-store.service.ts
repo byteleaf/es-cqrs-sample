@@ -18,4 +18,12 @@ export class EventStoreService {
       orderBy: { timeOccurred: 'asc' },
     });
   }
+
+  async getCountByAggregateId(aggregateId: string): Promise<number> {
+    return this.prismaService.event.count({
+      where: {
+        aggregateId: aggregateId,
+      },
+    });
+  }
 }

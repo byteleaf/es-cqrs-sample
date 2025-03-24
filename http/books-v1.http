@@ -13,7 +13,7 @@ POST http://localhost:3000/api/v1/books/borrow
 Content-Type: application/json
 
 {
-  "bookId": "494f9ce9-f26d-42a5-a944-bf8d8d6a848b",
+  "bookId": "74d21836-22e4-4a73-a061-6690a5bfabac",
   "readerId": "Alice"
 }
 

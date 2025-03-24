@@ -16,12 +16,12 @@ CREATE TABLE "events" (
 
 -- CreateTable
 CREATE TABLE "books" (
-    "id" TEXT NOT NULL,
+    "book_id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "author" TEXT NOT NULL,
     "isbn" TEXT NOT NULL,
     "status" "BookStatus" NOT NULL,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "books_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "books_pkey" PRIMARY KEY ("book_id")
 );
