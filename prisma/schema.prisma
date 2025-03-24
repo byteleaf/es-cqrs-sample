@@ -8,11 +8,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// generator classes {
-//   provider = "prisma-class-generator"
-//   output   = "../src/generated/entities"
-//   dryRun   = false
-// }
+generator classes {
+  provider = "prisma-class-generator"
+  dryRun   = false
+}
 
 datasource db {
   provider = "postgresql"
