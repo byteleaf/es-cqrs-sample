@@ -21,6 +21,10 @@ export class BookService {
     const events =
       await this.eventStore.getEventsByAggregateId<BookEvent[]>(aggregateId);
 
+    if (events.length === 0) {
+      throw new NotFoundException('Book not found');
+    }
+
     const aggregate = new BookAggregate(aggregateId);
     for (const event of events) {
       aggregate.apply(event);
@@ -29,12 +33,13 @@ export class BookService {
   }
 
   private async recordAndApply(bookEvent: BookEvent) {
-    const aggregate = await this.rehydrate(bookEvent.bookId);
-    const { revision } = aggregate.getState();
+    const events = await this.eventStore.getEventsByAggregateId<BookEvent[]>(
+      bookEvent.bookId,
+    );
 
     const event: Prisma.EventCreateInput = {
       aggregateId: bookEvent.bookId,
-      aggregateRevision: revision + 1,
+      aggregateRevision: events.length + 1,
       type: bookEvent.type,
       timeObserved: new Date(), // TODO: get from request
       timeOccurred: new Date(),
@@ -129,12 +134,6 @@ export class BookService {
 
   async getBookState(bookId: string) {
     const aggregate = await this.rehydrate(bookId);
-    const { revision } = aggregate.getState();
-
-    if (revision === 0) {
-      throw new NotFoundException('Book not found');
-    }
-
     return aggregate.getState();
   }
 }
