@@ -44,16 +44,16 @@ export class BookService {
     };
 
     await this.eventStore.appendEvent(event);
-    await this.projector.applyEvent(bookEvent);
+    await this.projector.applyEvent(event);
   }
 
-  // async replayEvents({ bookId }: { bookId: string }) {
-  //   const events = await this.eventStore.getEventsByAggregateId(bookId);
-  //
-  //   for (const event of events) {
-  //     await this.projector.applyEvent(event);
-  //   }
-  // }
+  async replayEvents({ bookId }: { bookId: string }) {
+    const events = await this.eventStore.getEventsByAggregateId(bookId);
+
+    for (const event of events) {
+      await this.projector.applyEvent(event);
+    }
+  }
 
   async registerBook({
     isbn,

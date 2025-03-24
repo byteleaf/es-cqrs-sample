@@ -1,18 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { BookEvent } from './events/book.events';
-import { BookStatus } from '@prisma/client';
+import { BookStatus, Event, Prisma } from '@prisma/client';
 
 @Injectable()
 export class BookProjectorService {
   constructor(private prisma: PrismaService) {}
 
-  async applyEvent(event: BookEvent) {
-    const { type, bookId, data } = event;
+  async applyEvent(event: Event | Prisma.EventCreateInput) {
+    const { type, aggregateId: bookId, data } = event;
 
     switch (type) {
       case 'BookRegistered':
-        const { title, author, isbn } = data;
+        const { title, author, isbn } = data as {
+          title: string;
+          author: string;
+          isbn: string;
+        }; // TODO: fix type
         await this.prisma.book.upsert({
           where: { bookId: bookId },
           create: {
@@ -37,7 +40,7 @@ export class BookProjectorService {
         });
         break;
       case 'BookReturned':
-        const { condition } = data;
+        const { condition } = data as Prisma.JsonObject;
         await this.prisma.book.update({
           where: { bookId },
           data: {
