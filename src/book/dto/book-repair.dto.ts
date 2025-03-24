@@ -1,4 +1,4 @@
 export class BookRepair {
-  id: string;
+  bookId: string;
   comment: string;
 }

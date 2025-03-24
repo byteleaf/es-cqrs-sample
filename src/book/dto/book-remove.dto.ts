@@ -1,4 +1,4 @@
 export class BookRemove {
-  id: string;
+  bookId: string;
   reason: string;
 }

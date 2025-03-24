@@ -1,4 +1,4 @@
 export class BookBorrow {
-  id: string;
+  bookId: string;
   readerId: string;
 }
