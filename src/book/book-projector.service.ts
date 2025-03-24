@@ -12,27 +12,34 @@ export class BookProjectorService {
 
     switch (type) {
       case 'BookRegistered':
-        const { title, author } = data;
-        await this.prisma.book.create({
-          data: {
-            id: bookId,
-            title: title,
-            author: author,
-            isbn: data.isbn,
+        const { title, author, isbn } = data;
+        await this.prisma.book.upsert({
+          where: { bookId: bookId },
+          create: {
+            bookId,
+            title,
+            author,
+            isbn,
+            status: BookStatus.AVAILABLE,
+          },
+          update: {
+            title,
+            author,
+            isbn,
             status: BookStatus.AVAILABLE,
           },
         });
         break;
       case 'BookBorrowed':
         await this.prisma.book.update({
-          where: { id: bookId },
+          where: { bookId },
           data: { status: BookStatus.BORROWED },
         });
         break;
       case 'BookReturned':
         const { condition } = data;
         await this.prisma.book.update({
-          where: { id: bookId },
+          where: { bookId },
           data: {
             status:
               condition === 'good' ? BookStatus.AVAILABLE : BookStatus.DAMAGED,
@@ -41,13 +48,13 @@ export class BookProjectorService {
         break;
       case 'BookRepaired':
         await this.prisma.book.update({
-          where: { id: bookId },
+          where: { bookId },
           data: { status: BookStatus.REPAIRED },
         });
         break;
       case 'BookRemoved':
         await this.prisma.book.update({
-          where: { id: bookId },
+          where: { bookId },
           data: { status: BookStatus.REMOVED },
         });
         break;

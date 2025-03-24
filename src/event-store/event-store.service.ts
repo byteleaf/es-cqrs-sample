@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Event, Prisma } from '@prisma/client';
 
 @Injectable()
 export class EventStoreService {
@@ -10,12 +10,12 @@ export class EventStoreService {
     await this.prismaService.event.create({ data: event });
   }
 
-  async getEventsByAggregateId<T>(aggregateId: string) {
+  async getEventsByAggregateId(aggregateId: string): Promise<Event[]> {
     return this.prismaService.event.findMany({
       where: {
         aggregateId: aggregateId,
       },
       orderBy: { timeOccurred: 'asc' },
-    }) as T;
+    });
   }
 }

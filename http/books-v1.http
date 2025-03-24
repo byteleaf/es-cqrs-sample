@@ -13,7 +13,7 @@ POST http://localhost:3000/api/v1/books/borrow
 Content-Type: application/json
 
 {
-  "bookId": "a3acba5b-466f-4af3-a082-c2bbaf4c8096",
+  "bookId": "494f9ce9-f26d-42a5-a944-bf8d8d6a848b",
   "readerId": "Alice"
 }
 
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/v1/books/return
 Content-Type: application/json
 
 {
-  "bookId": "a3acba5b-466f-4af3-a082-c2bbaf4c8096",
+  "bookId": "52bc45a9-5b5a-499c-a740-ec935903d065",
   "condition": "bad"
 }
 
@@ -31,7 +31,7 @@ POST http://localhost:3000/api/v1/books/repair
 Content-Type: application/json
 
 {
-  "bookId": "a3acba5b-466f-4af3-a082-c2bbaf4c8096",
+  "bookId": "52bc45a9-5b5a-499c-a740-ec935903d065",
   "comment": "Page pinned"
 }
 
@@ -40,9 +40,13 @@ POST http://localhost:3000/api/v1/books/remove
 Content-Type: application/json
 
 {
-"bookId": "a3acba5b-466f-4af3-a082-c2bbaf4c8096",
+"bookId": "52bc45a9-5b5a-499c-a740-ec935903d065",
 "reason": "Book is unrepairable"
 }
 
 ### Get a book
-GET http://localhost:3000/api/v1/books/a3acba5b-466f-4af3-a082-c2bbaf4c8096
+GET http://localhost:3000/api/v1/books/52bc45a9-5b5a-499c-a740-ec935903d065
+
+
+### Replay the last event
+POST http://localhost:3000/api/v1/books/replay/52bc45a9-5b5a-499c-a740-ec935903d065

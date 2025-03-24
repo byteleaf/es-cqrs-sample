@@ -43,4 +43,10 @@ export class BookController {
   getBookState(@Param('id') id: string) {
     return this.bookService.getBookState(id);
   }
+
+  // @Post('replay/:id')
+  // @HttpCode(204)
+  // replayEvents(@Param('id') id: string) {
+  //   return this.bookService.replayEvents({ bookId: id });
+  // }
 }

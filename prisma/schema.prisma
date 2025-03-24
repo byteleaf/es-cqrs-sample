@@ -34,7 +34,7 @@ enum BookStatus {
 }
 
 model Book {
-  id        String     @id @default(uuid())
+  bookId    String     @id @default(uuid()) @map("book_id")
   title     String
   author    String
   isbn      String

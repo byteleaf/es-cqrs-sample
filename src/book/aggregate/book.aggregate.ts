@@ -1,5 +1,4 @@
-import { BookEvent } from '../events/book.events';
-import { BookStatus } from '@prisma/client';
+import { BookStatus, Event, Prisma } from '@prisma/client';
 
 export type BookState = {
   id: string;
@@ -18,27 +17,28 @@ export class BookAggregate {
     this.state = { id: aggregateId, revision: 0 };
   }
 
-  apply(event: BookEvent) {
+  apply(event: Event) {
     switch (event.type) {
       case 'BookRegistered':
         this.state = {
           ...this.state,
-          ...event.data,
+          ...(event.data as Prisma.JsonObject),
           status: BookStatus.AVAILABLE,
         };
         break;
       case 'BookBorrowed':
+        const { readerId } = event.data as Prisma.JsonObject;
         this.state = {
           ...this.state,
           status: BookStatus.BORROWED,
-          readerId: event.data.readerId,
+          readerId: readerId as string, //TODO: fix type
         };
         break;
       case 'BookReturned':
         this.state = {
           ...this.state,
           status:
-            event.data.condition === 'good'
+            (event.data as Prisma.JsonObject).condition === 'good'
               ? BookStatus.AVAILABLE
               : BookStatus.DAMAGED,
           readerId: null,

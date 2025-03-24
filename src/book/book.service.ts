@@ -18,8 +18,7 @@ export class BookService {
   ) {}
 
   private async rehydrate(aggregateId: string): Promise<BookAggregate> {
-    const events =
-      await this.eventStore.getEventsByAggregateId<BookEvent[]>(aggregateId);
+    const events = await this.eventStore.getEventsByAggregateId(aggregateId);
 
     if (events.length === 0) {
       throw new NotFoundException('Book not found');
@@ -33,7 +32,7 @@ export class BookService {
   }
 
   private async recordAndApply(bookEvent: BookEvent) {
-    const events = await this.eventStore.getEventsByAggregateId<BookEvent[]>(
+    const events = await this.eventStore.getEventsByAggregateId(
       bookEvent.bookId,
     );
 
@@ -49,6 +48,14 @@ export class BookService {
     await this.eventStore.appendEvent(event);
     await this.projector.applyEvent(bookEvent);
   }
+
+  // async replayEvents({ bookId }: { bookId: string }) {
+  //   const events = await this.eventStore.getEventsByAggregateId(bookId);
+  //
+  //   for (const event of events) {
+  //     await this.projector.applyEvent(event);
+  //   }
+  // }
 
   async registerBook({
     isbn,
