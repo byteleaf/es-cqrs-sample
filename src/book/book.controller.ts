@@ -1,19 +1,42 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { BookService } from './book.service';
 import { BookRegistration } from './dto/book-registration.dto';
 import { BookBorrow } from './dto/book-borrow.dto';
+import { BookReturn } from './dto/book-return.dto';
+import { BookRepair } from './dto/book-repair.dto';
+import { BookRemove } from './dto/book-remove.dto';
 
-@Controller('v1/book')
+@Controller('v1/books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post('register')
-  create(@Body() bookRegistration: BookRegistration) {
+  registerBook(@Body() bookRegistration: BookRegistration) {
     return this.bookService.registerBook(bookRegistration);
   }
 
   @Post('borrow')
-  borrow(@Body() bookBorrow: BookBorrow) {
+  borrowBook(@Body() bookBorrow: BookBorrow) {
     return this.bookService.borrowBook(bookBorrow);
+  }
+
+  @Post('return')
+  returnBook(@Body() bookReturn: BookReturn) {
+    return this.bookService.returnBook(bookReturn);
+  }
+
+  @Post('repair')
+  repairBook(@Body() bookRepair: BookRepair) {
+    return this.bookService.repairBook(bookRepair);
+  }
+
+  @Post('remove')
+  removeBook(@Body() bookRepair: BookRemove) {
+    return this.bookService.removeBook(bookRepair);
+  }
+
+  @Get(':id')
+  getBookState(@Param('id') id: string) {
+    return this.bookService.getBookState(id);
   }
 }

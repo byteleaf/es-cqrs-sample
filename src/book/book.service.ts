@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { EventStoreService } from '../event-store/event-store.service';
 import { BookProjectorService } from './book-projector.service';
 import { BookAggregate } from './aggregate/book.aggregate';
-import { Prisma } from '@prisma/client';
-import { BookEvent, Condition } from './events/book.events';
+import { BookStatus, Prisma } from '@prisma/client';
+import { BookEvent } from './events/book.events';
+import { Condition } from './types/condition.type';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BookService {
@@ -24,7 +26,7 @@ export class BookService {
 
   private async recordAndApply(bookEvent: BookEvent) {
     const event: Prisma.EventCreateInput = {
-      aggregateId: 'bookId' in bookEvent ? bookEvent.bookId : null,
+      aggregateId: bookEvent.bookId,
       aggregateRevision: 0,
       type: bookEvent.type,
       timeObserved: new Date(), // TODO: get from request
@@ -46,17 +48,20 @@ export class BookService {
     author: string;
   }) {
     const event: BookEvent = {
+      bookId: uuidv4(),
       type: 'BookRegistered',
       data: { isbn, title, author },
     };
 
     await this.recordAndApply(event);
+    return event.bookId;
   }
 
   async borrowBook({ id, readerId }: { id: string; readerId: string }) {
     const aggregate = await this.rehydrate(id);
     const state = aggregate.getState();
-    if (state.status !== 'available') throw new Error('Book not available');
+    if (state.status !== BookStatus.AVAILABLE)
+      throw new ConflictException('Book not available');
 
     const event: BookEvent = {
       type: 'BookBorrowed',
@@ -66,10 +71,11 @@ export class BookService {
     await this.recordAndApply(event);
   }
 
-  async returnBook(id: string, condition: Condition) {
+  async returnBook({ id, condition }: { id: string; condition: Condition }) {
     const aggregate = await this.rehydrate(id);
     const state = aggregate.getState();
-    if (state.status !== 'borrowed') throw new Error('Book not borrowed');
+    if (state.status !== BookStatus.BORROWED)
+      throw new ConflictException('Book not borrowed');
 
     const event: BookEvent = {
       type: 'BookReturned',
@@ -78,37 +84,38 @@ export class BookService {
     };
     await this.recordAndApply(event);
   }
-  //
-  // async repairBook(id: string, description: string) {
-  //   const aggregate = await this.rehydrate(id);
-  //   const state = aggregate.getState();
-  //   if (state.status !== 'repair') throw new Error('Book not in repair');
-  //
-  //   await this.eventStore.appendEvent({
-  //     aggregateId: id,
-  //     type: 'BookRepaired',
-  //     data: { description },
-  //     aggregateRevision: state.revision,
-  //     timeOccurred: new Date(),
-  //   });
-  // }
-  //
-  // async removeBook(id: string, reason: string) {
-  //   const aggregate = await this.rehydrate(id);
-  //   const state = aggregate.getState();
-  //   if (state.status === 'removed') throw new Error('Already removed');
-  //
-  //   await this.eventStore.appendEvent({
-  //     aggregateId: id,
-  //     type: 'BookRemoved',
-  //     data: { reason },
-  //     aggregateRevision: state.revision,
-  //     timeOccurred: new Date(),
-  //   });
-  // }
 
-  // async getBookState(id: string) {
-  //   const aggregate = await this.rehydrate(id);
-  //   return aggregate.getState();
-  // }
+  async repairBook({ id, comment }: { id: string; comment: string }) {
+    const aggregate = await this.rehydrate(id);
+    const state = aggregate.getState();
+    if (state.status !== BookStatus.DAMAGED)
+      throw new ConflictException('Book not damaged');
+
+    const event: BookEvent = {
+      type: 'BookRepaired',
+      bookId: id,
+      data: { comment },
+    };
+    await this.recordAndApply(event);
+  }
+
+  async removeBook({ id, reason }: { id: string; reason: string }) {
+    const aggregate = await this.rehydrate(id);
+    const state = aggregate.getState();
+    if (state.status === BookStatus.REMOVED)
+      throw new ConflictException('Already removed');
+
+    const event: BookEvent = {
+      type: 'BookRemoved',
+      bookId: id,
+      data: { reason },
+    };
+
+    await this.recordAndApply(event);
+  }
+
+  async getBookState(id: string) {
+    const aggregate = await this.rehydrate(id);
+    return aggregate.getState();
+  }
 }

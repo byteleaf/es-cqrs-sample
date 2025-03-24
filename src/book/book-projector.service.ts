@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookEvent } from './events/book.events';
+import { BookStatus } from '@prisma/client';
 
 @Injectable()
 export class BookProjectorService {
@@ -11,38 +12,43 @@ export class BookProjectorService {
 
     switch (type) {
       case 'BookRegistered':
-        const { title, author } = data as { title: string; author: string }; // TODO: type guard
+        const { title, author } = data;
         await this.prisma.book.create({
           data: {
             id: bookId,
             title: title,
             author: author,
-            status: 'available',
+            isbn: data.isbn,
+            status: BookStatus.AVAILABLE,
           },
         });
         break;
       case 'BookBorrowed':
         await this.prisma.book.update({
           where: { id: bookId },
-          data: { status: 'borrowed' },
+          data: { status: BookStatus.BORROWED },
         });
         break;
       case 'BookReturned':
+        const { condition } = data;
         await this.prisma.book.update({
           where: { id: bookId },
-          data: { status: 'available' },
+          data: {
+            status:
+              condition === 'good' ? BookStatus.AVAILABLE : BookStatus.DAMAGED,
+          },
         });
         break;
       case 'BookRepaired':
         await this.prisma.book.update({
           where: { id: bookId },
-          data: { status: 'repaired' },
+          data: { status: BookStatus.REPAIRED },
         });
         break;
       case 'BookRemoved':
         await this.prisma.book.update({
           where: { id: bookId },
-          data: { status: 'removed' },
+          data: { status: BookStatus.REMOVED },
         });
         break;
     }

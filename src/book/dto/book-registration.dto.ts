@@ -1,5 +1,12 @@
+import { IsString } from 'class-validator';
+
 export class BookRegistration {
-  isbn: string;
+  @IsString()
   title: string;
+
+  @IsString()
   author: string;
+
+  @IsString()
+  isbn: string;
 }

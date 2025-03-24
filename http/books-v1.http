@@ -1,0 +1,48 @@
+### Register a book
+POST http://localhost:3000/api/v1/books/register
+Content-Type: application/json
+
+{
+    "title": "The Lord of the Rings",
+    "author": "J.R.R. Tolkien",
+    "isbn": "978-3-16-148410-0"
+}
+
+### Borrow a book
+POST http://localhost:3000/api/v1/books/borrow
+Content-Type: application/json
+
+{
+  "id": "bbbda0cd-4500-4dfe-9fe8-5de97044b2af",
+  "readerId": "Alice"
+}
+
+### Return a book
+POST http://localhost:3000/api/v1/books/return
+Content-Type: application/json
+
+{
+  "id": "bbbda0cd-4500-4dfe-9fe8-5de97044b2af",
+  "condition": "bad"
+}
+
+### Repair a book
+POST http://localhost:3000/api/v1/books/repair
+Content-Type: application/json
+
+{
+  "id": "bbbda0cd-4500-4dfe-9fe8-5de97044b2af",
+  "comment": "Page pinned"
+}
+
+### Remove a book
+POST http://localhost:3000/api/v1/books/remove
+Content-Type: application/json
+
+{
+"id": "bbbda0cd-4500-4dfe-9fe8-5de97044b2af",
+"reason": "Book is unrepairable"
+}
+
+### Get a book
+GET http://localhost:3000/api/v1/books/bbbda0cd-4500-4dfe-9fe8-5de97044b2af

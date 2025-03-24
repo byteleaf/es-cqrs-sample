@@ -10,13 +10,6 @@ export class EventStoreService {
     await this.prismaService.event.create({ data: event });
   }
 
-  async getEventsByType(type: string) {
-    return this.prismaService.event.findMany({
-      where: { type },
-      orderBy: { timeOccurred: 'asc' },
-    });
-  }
-
   async getEventsByAggregateId<T>(aggregateId: string) {
     return this.prismaService.event.findMany({
       where: {

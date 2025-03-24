@@ -1,11 +1,12 @@
 import { BookEvent } from '../events/book.events';
+import { BookStatus } from '@prisma/client';
 
 export type BookState = {
   id: string;
   title?: string;
   author?: string;
   isbn?: string;
-  status?: 'available' | 'borrowed' | 'repair' | 'removed';
+  status?: BookStatus;
   readerId?: string | null;
   revision: number;
 };
@@ -23,33 +24,36 @@ export class BookAggregate {
         this.state = {
           ...this.state,
           ...event.data,
-          status: 'available',
+          status: BookStatus.AVAILABLE,
         };
         break;
       case 'BookBorrowed':
         this.state = {
           ...this.state,
-          status: 'borrowed',
+          status: BookStatus.BORROWED,
           readerId: event.data.readerId,
         };
         break;
       case 'BookReturned':
         this.state = {
           ...this.state,
-          status: event.data.condition === 'good' ? 'available' : 'repair',
+          status:
+            event.data.condition === 'good'
+              ? BookStatus.AVAILABLE
+              : BookStatus.DAMAGED,
           readerId: null,
         };
         break;
       case 'BookRepaired':
         this.state = {
           ...this.state,
-          status: 'available',
+          status: BookStatus.AVAILABLE,
         };
         break;
       case 'BookRemoved':
         this.state = {
           ...this.state,
-          status: 'removed',
+          status: BookStatus.REMOVED,
         };
         break;
     }

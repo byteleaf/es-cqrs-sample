@@ -8,11 +8,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator classes {
-  provider = "prisma-class-generator"
-  dryRun   = false
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -20,7 +15,7 @@ datasource db {
 
 model Event {
   id                String   @id @default(uuid())
-  aggregateId       String   @default(uuid()) @map("aggregate_id")
+  aggregateId       String   @map("aggregate_id")
   aggregateRevision Int      @map("aggregate_revision")
   type              String
   timeObserved      DateTime @map("time_observed")
@@ -30,12 +25,21 @@ model Event {
   @@map("events")
 }
 
+enum BookStatus {
+  AVAILABLE
+  BORROWED
+  DAMAGED
+  REPAIRED
+  REMOVED
+}
+
 model Book {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   title     String
   author    String
-  status    String // 'available' | 'borrowed' | 'repaired' | 'removed'
-  updatedAt DateTime @updatedAt @map("updated_at")
+  isbn      String
+  status    BookStatus
+  updatedAt DateTime   @updatedAt @map("updated_at")
 
   @@map("books")
 }

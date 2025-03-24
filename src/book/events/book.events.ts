@@ -1,14 +1,14 @@
+import { Condition } from '../types/condition.type';
+
 type BaseBookEvent = {
   bookId: string;
 };
 
-export type Condition = 'good' | 'bad';
-
 export type BookEvent =
-  | {
+  | (BaseBookEvent & {
       type: 'BookRegistered';
       data: { title: string; author: string; isbn: string };
-    }
+    })
   | (BaseBookEvent & {
       type: 'BookBorrowed';
       bookId: string;
@@ -24,5 +24,5 @@ export type BookEvent =
     })
   | (BaseBookEvent & {
       type: 'BookRemoved';
-      data: { comment: string };
+      data: { reason: string };
     });
