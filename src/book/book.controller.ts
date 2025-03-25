@@ -13,16 +13,22 @@ import { BookBorrow } from './dto/book-borrow.dto';
 import { BookReturn } from './dto/book-return.dto';
 import { BookRepair } from './dto/book-repair.dto';
 import { BookRemove } from './dto/book-remove.dto';
+import { ApiOperation } from '@nestjs/swagger';
+
+class Book {
+  bookId: string;
+}
 
 @Controller('v1/books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post('register')
-  registerBook(@Body() bookRegistration: BookRegistration) {
+  registerBook(@Body() bookRegistration: BookRegistration): Promise<Book> {
     return this.bookService.registerBook(bookRegistration);
   }
 
+  @ApiOperation({ summary: 'Borrow a book' })
   @Post('borrow')
   @HttpCode(204)
   borrowBook(@Body() bookBorrow: BookBorrow) {

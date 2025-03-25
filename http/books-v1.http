@@ -13,8 +13,8 @@ POST http://localhost:3000/api/v1/books/borrow
 Content-Type: application/json
 
 {
-  "bookId": "c0457c04-5e91-4d27-b325-bbc79ff5ddc3",
-  "readerId": "Alice"
+  "bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
+  "readerId": "Bob"
 }
 
 ### Return a book
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/v1/books/return
 Content-Type: application/json
 
 {
-  "bookId": "589e7841-5245-4667-bee6-e0ef88344e86",
+  "bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
   "condition": "bad"
 }
 
@@ -31,7 +31,7 @@ POST http://localhost:3000/api/v1/books/repair
 Content-Type: application/json
 
 {
-  "bookId": "589e7841-5245-4667-bee6-e0ef88344e86",
+  "bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
   "comment": "Page pinned"
 }
 
@@ -40,13 +40,15 @@ POST http://localhost:3000/api/v1/books/remove
 Content-Type: application/json
 
 {
-"bookId": "589e7841-5245-4667-bee6-e0ef88344e86",
+"bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
 "reason": "Book is unrepairable"
 }
 
 ### Get a book
-GET http://localhost:3000/api/v1/books/589e7841-5245-4667-bee6-e0ef88344e86?revision=3
+GET http://localhost:3000/api/v1/books/82d3cfa1-f0d7-479d-896c-2c15c84258de
 
+### Get a book on Revision 3
+GET http://localhost:3000/api/v1/books/82d3cfa1-f0d7-479d-896c-2c15c84258de?revision=3
 
 ### Replay the last event
-POST http://localhost:3000/api/v1/books/replay/589e7841-5245-4667-bee6-e0ef88344e86
+POST http://localhost:3000/api/v1/books/replay/82d3cfa1-f0d7-479d-896c-2c15c84258de

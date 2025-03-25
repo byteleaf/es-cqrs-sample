@@ -5,15 +5,19 @@ import {
 } from '@nestjs/common';
 import { EventStoreService } from '../event-store/event-store.service';
 import { BookProjectorService } from './book-projector.service';
-import { BookAggregate } from './aggregate/book.aggregate';
+import { BookAggregate, BookState } from './aggregate/book.aggregate';
 import { BookStatus, Prisma } from '@prisma/client';
 import { BookEvent } from './events/book.events';
 import { Condition } from './types/condition.type';
+import { SnapshotService } from '../snapshot/snapshot.service';
+
+const SNAPSHOT_THRESHOLD = 3;
 
 @Injectable()
 export class BookService {
   constructor(
     private readonly eventStore: EventStoreService,
+    private readonly snapshotService: SnapshotService,
     private readonly projector: BookProjectorService,
   ) {}
 
@@ -21,16 +25,26 @@ export class BookService {
     aggregateId: string,
     revision?: number,
   ): Promise<BookAggregate> {
-    const events = await this.eventStore.getEventsByAggregateId(
+    const aggregate = new BookAggregate(aggregateId);
+
+    const snapshot = await this.snapshotService.getLatestSnapshot(aggregateId);
+    const events = await this.eventStore.getEventsByAggregateIdAfterRevision(
       aggregateId,
+      snapshot?.revision ?? 0,
       revision,
     );
 
-    if (events.length === 0) {
+    if (events.length === 0 && !snapshot) {
       throw new NotFoundException('Book not found');
     }
 
-    const aggregate = new BookAggregate(aggregateId);
+    if (snapshot) {
+      aggregate.loadFromSnapshot(
+        snapshot.state as BookState,
+        snapshot.revision,
+      );
+    }
+
     for (const event of events) {
       aggregate.apply(event);
     }
@@ -51,6 +65,16 @@ export class BookService {
 
     await this.eventStore.appendEvent(event);
     await this.projector.applyEvent(event);
+
+    if ((count + 1) % SNAPSHOT_THRESHOLD === 0) {
+      const aggregate = await this.rehydrate(bookEvent.bookId);
+      const state = aggregate.getState();
+      await this.snapshotService.saveSnapshot(
+        bookEvent.bookId,
+        state.revision,
+        state,
+      );
+    }
   }
 
   async registerBook({

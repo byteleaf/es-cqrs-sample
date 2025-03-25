@@ -23,6 +23,23 @@ export class EventStoreService {
     });
   }
 
+  async getEventsByAggregateIdAfterRevision(
+    aggregateId: string,
+    minRevision: number,
+    maxRevision?: number,
+  ) {
+    return this.prismaService.event.findMany({
+      where: {
+        aggregateId,
+        aggregateRevision: {
+          gt: minRevision,
+          ...(maxRevision ? { lte: maxRevision } : {}),
+        },
+      },
+      orderBy: { timeOccurred: 'asc' },
+    });
+  }
+
   async getCountByAggregateId(aggregateId: string): Promise<number> {
     return this.prismaService.event.count({
       where: {

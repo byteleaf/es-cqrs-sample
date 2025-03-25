@@ -17,6 +17,10 @@ export class BookAggregate {
     this.state = { id: aggregateId, revision: 0 };
   }
 
+  loadFromSnapshot(state: BookState, revision: number) {
+    this.state = { ...state, revision };
+  }
+
   apply(event: Event) {
     switch (event.type) {
       case 'BookRegistered':
