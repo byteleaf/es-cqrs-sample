@@ -18,7 +18,7 @@ Content-Type: application/json
 
 {
   "bookId": "{{bookId}}",
-  "readerId": "Bob"
+  "readerId": "reader-123"
 }
 
 ### Return a book
