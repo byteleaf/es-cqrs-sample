@@ -22,6 +22,7 @@ model Event {
   timeOccurred      DateTime @map("time_occurred")
   data              Json
 
+  @@index([aggregateId])
   @@map("events")
 }
 
