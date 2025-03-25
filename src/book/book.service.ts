@@ -17,8 +17,14 @@ export class BookService {
     private readonly projector: BookProjectorService,
   ) {}
 
-  private async rehydrate(aggregateId: string): Promise<BookAggregate> {
-    const events = await this.eventStore.getEventsByAggregateId(aggregateId);
+  private async rehydrate(
+    aggregateId: string,
+    revision?: number,
+  ): Promise<BookAggregate> {
+    const events = await this.eventStore.getEventsByAggregateId(
+      aggregateId,
+      revision,
+    );
 
     if (events.length === 0) {
       throw new NotFoundException('Book not found');
@@ -45,14 +51,6 @@ export class BookService {
 
     await this.eventStore.appendEvent(event);
     await this.projector.applyEvent(event);
-  }
-
-  async replayEvents({ bookId }: { bookId: string }) {
-    const events = await this.eventStore.getEventsByAggregateId(bookId);
-
-    for (const event of events) {
-      await this.projector.applyEvent(event);
-    }
   }
 
   async registerBook({
@@ -139,8 +137,19 @@ export class BookService {
     await this.recordAndApply(event);
   }
 
-  async getBookState(bookId: string) {
-    const aggregate = await this.rehydrate(bookId);
+  async getBookState(bookId: string, revision?: number) {
+    const aggregate = await this.rehydrate(bookId, revision);
     return aggregate.getState();
+  }
+
+  async replayEvents(bookId: string, revision?: number) {
+    const events = await this.eventStore.getEventsByAggregateId(
+      bookId,
+      revision,
+    );
+
+    for (const event of events) {
+      await this.projector.applyEvent(event);
+    }
   }
 }

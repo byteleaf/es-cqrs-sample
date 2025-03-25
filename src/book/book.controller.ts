@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { BookService } from './book.service';
 import { BookRegistration } from './dto/book-registration.dto';
 import { BookBorrow } from './dto/book-borrow.dto';
@@ -40,13 +48,13 @@ export class BookController {
   }
 
   @Get(':id')
-  getBookState(@Param('id') id: string) {
-    return this.bookService.getBookState(id);
+  getBookState(@Param('id') id: string, @Query('revision') revision?: number) {
+    return this.bookService.getBookState(id, revision);
   }
 
   @Post('replay/:id')
   @HttpCode(204)
-  replayEvents(@Param('id') id: string) {
-    return this.bookService.replayEvents({ bookId: id });
+  replayEvents(@Param('id') id: string, @Query('revision') revision?: number) {
+    return this.bookService.replayEvents(id, revision);
   }
 }

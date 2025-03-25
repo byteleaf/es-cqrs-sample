@@ -45,7 +45,7 @@ Content-Type: application/json
 }
 
 ### Get a book
-GET http://localhost:3000/api/v1/books/c0457c04-5e91-4d27-b325-bbc79ff5ddc3
+GET http://localhost:3000/api/v1/books/589e7841-5245-4667-bee6-e0ef88344e86?revision=3
 
 
 ### Replay the last event
