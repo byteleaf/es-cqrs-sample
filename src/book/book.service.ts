@@ -71,7 +71,9 @@ export class BookService {
     };
 
     await this.recordAndApply(event);
-    return event.bookId;
+    return {
+      bookId: event.bookId,
+    };
   }
 
   async borrowBook({ bookId, readerId }: { bookId: string; readerId: string }) {
