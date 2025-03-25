@@ -3,17 +3,21 @@ POST http://localhost:3000/api/v1/books/register
 Content-Type: application/json
 
 {
-    "title": "The Lord of the Rings",
-    "author": "J.R.R. Tolkien",
-    "isbn": "978-3-16-148410-0"
+  "title": "The Lord of the Rings",
+  "author": "J.R.R. Tolkien",
+  "isbn": "978-3-16-148410-0"
 }
+
+> {%
+    client.global.set("bookId", response.body.bookId);
+%}
 
 ### Borrow a book
 POST http://localhost:3000/api/v1/books/borrow
 Content-Type: application/json
 
 {
-  "bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
+  "bookId": "{{bookId}}",
   "readerId": "Bob"
 }
 
@@ -22,7 +26,7 @@ POST http://localhost:3000/api/v1/books/return
 Content-Type: application/json
 
 {
-  "bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
+  "bookId": "{{bookId}}",
   "condition": "bad"
 }
 
@@ -31,7 +35,7 @@ POST http://localhost:3000/api/v1/books/repair
 Content-Type: application/json
 
 {
-  "bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
+  "bookId": "{{bookId}}",
   "comment": "Page pinned"
 }
 
@@ -40,15 +44,15 @@ POST http://localhost:3000/api/v1/books/remove
 Content-Type: application/json
 
 {
-"bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
-"reason": "Book is unrepairable"
+  "bookId": "{{bookId}}",
+  "reason": "Book is unrepairable"
 }
 
 ### Get a book
-GET http://localhost:3000/api/v1/books/ef069c76-7b9b-4ae9-9995-004f261523a8
+GET http://localhost:3000/api/v1/books/{{bookId}}
 
 ### Get a book on Revision 2
-GET http://localhost:3000/api/v1/books/ef069c76-7b9b-4ae9-9995-004f261523a8?revision=2
+GET http://localhost:3000/api/v1/books/{{bookId}}?revision=2
 
 ### Replay the last event
-POST http://localhost:3000/api/v1/books/replay/ef069c76-7b9b-4ae9-9995-004f261523a8
+POST http://localhost:3000/api/v1/books/replay/{{bookId}}
