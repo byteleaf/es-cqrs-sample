@@ -16,9 +16,12 @@ export class SnapshotService {
     });
   }
 
-  async getLatestSnapshot(aggregateId: string) {
+  async getLatestSnapshotOnRevision(aggregateId: string, revision?: number) {
     return this.prismaService.snapshot.findFirst({
-      where: { aggregateId },
+      where: {
+        aggregateId,
+        revision: revision ? { lte: revision } : undefined,
+      },
       orderBy: { revision: 'desc' },
     });
   }

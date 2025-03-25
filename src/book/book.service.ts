@@ -27,7 +27,11 @@ export class BookService {
   ): Promise<BookAggregate> {
     const aggregate = new BookAggregate(aggregateId);
 
-    const snapshot = await this.snapshotService.getLatestSnapshot(aggregateId);
+    const snapshot = await this.snapshotService.getLatestSnapshotOnRevision(
+      aggregateId,
+      revision,
+    );
+
     const events = await this.eventStore.getEventsByAggregateIdAfterRevision(
       aggregateId,
       snapshot?.revision ?? 0,

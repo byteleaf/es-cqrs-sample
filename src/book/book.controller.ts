@@ -15,16 +15,12 @@ import { BookRepair } from './dto/book-repair.dto';
 import { BookRemove } from './dto/book-remove.dto';
 import { ApiOperation } from '@nestjs/swagger';
 
-class Book {
-  bookId: string;
-}
-
 @Controller('v1/books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post('register')
-  registerBook(@Body() bookRegistration: BookRegistration): Promise<Book> {
+  registerBook(@Body() bookRegistration: BookRegistration) {
     return this.bookService.registerBook(bookRegistration);
   }
 

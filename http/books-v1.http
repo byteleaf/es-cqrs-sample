@@ -13,7 +13,7 @@ POST http://localhost:3000/api/v1/books/borrow
 Content-Type: application/json
 
 {
-  "bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
+  "bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
   "readerId": "Bob"
 }
 
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/v1/books/return
 Content-Type: application/json
 
 {
-  "bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
+  "bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
   "condition": "bad"
 }
 
@@ -31,7 +31,7 @@ POST http://localhost:3000/api/v1/books/repair
 Content-Type: application/json
 
 {
-  "bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
+  "bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
   "comment": "Page pinned"
 }
 
@@ -40,15 +40,15 @@ POST http://localhost:3000/api/v1/books/remove
 Content-Type: application/json
 
 {
-"bookId": "82d3cfa1-f0d7-479d-896c-2c15c84258de",
+"bookId": "ef069c76-7b9b-4ae9-9995-004f261523a8",
 "reason": "Book is unrepairable"
 }
 
 ### Get a book
-GET http://localhost:3000/api/v1/books/82d3cfa1-f0d7-479d-896c-2c15c84258de
+GET http://localhost:3000/api/v1/books/ef069c76-7b9b-4ae9-9995-004f261523a8
 
-### Get a book on Revision 3
-GET http://localhost:3000/api/v1/books/82d3cfa1-f0d7-479d-896c-2c15c84258de?revision=3
+### Get a book on Revision 2
+GET http://localhost:3000/api/v1/books/ef069c76-7b9b-4ae9-9995-004f261523a8?revision=2
 
 ### Replay the last event
-POST http://localhost:3000/api/v1/books/replay/82d3cfa1-f0d7-479d-896c-2c15c84258de
+POST http://localhost:3000/api/v1/books/replay/ef069c76-7b9b-4ae9-9995-004f261523a8
