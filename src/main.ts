@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const globalPrefix = 'api';
+  const openApiDocPath = `${globalPrefix}/doc`;
 
   app.setGlobalPrefix(globalPrefix);
 
@@ -21,12 +22,15 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup(openApiDocPath, app, document);
 
   await app.listen(port);
 
   Logger.log(
     `🚀 Application is running on: ${serverUrl}:${port}/${globalPrefix}`,
+  );
+  Logger.log(
+    `🚀 Swagger UI is running on: ${serverUrl}:${port}/${openApiDocPath} - Openapi Spec could found on: ${serverUrl}:${port}/${openApiDocPath}-yaml or ${serverUrl}:${port}/${openApiDocPath}-json`,
   );
 }
 bootstrap();
