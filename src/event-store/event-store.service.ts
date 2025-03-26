@@ -19,7 +19,7 @@ export class EventStoreService {
         aggregateId: aggregateId,
         aggregateRevision: revision ? { lte: revision } : undefined,
       },
-      orderBy: { timeOccurred: 'asc' },
+      orderBy: { createdAt: 'asc' },
     });
   }
 
@@ -36,7 +36,7 @@ export class EventStoreService {
           ...(maxRevision ? { lte: maxRevision } : {}),
         },
       },
-      orderBy: { timeOccurred: 'asc' },
+      orderBy: { createdAt: 'asc' },
     });
   }
 

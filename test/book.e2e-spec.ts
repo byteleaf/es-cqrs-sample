@@ -78,7 +78,7 @@ describe('BookController (e2e)', () => {
 
   it('should get the book state', () => {
     return request(app.getHttpServer())
-      .get(`/api/v1/books/${bookId}`)
+      .get(`/api/v1/books/state/${bookId}`)
       .expect(200)
       .expect((res) => {
         expect(res.body.id).toBe(bookId);
@@ -87,7 +87,7 @@ describe('BookController (e2e)', () => {
 
   it('should return 404 for non-existing book', () => {
     return request(app.getHttpServer())
-      .get('/api/v1/books/non-existing-id')
+      .get('/api/v1/books/state/non-existing-id')
       .expect(404);
   });
 });

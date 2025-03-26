@@ -7,8 +7,7 @@ CREATE TABLE "events" (
     "aggregate_id" TEXT NOT NULL,
     "aggregate_revision" INTEGER NOT NULL,
     "type" TEXT NOT NULL,
-    "time_observed" TIMESTAMP(3) NOT NULL,
-    "time_occurred" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "data" JSONB NOT NULL,
 
     CONSTRAINT "events_pkey" PRIMARY KEY ("id")

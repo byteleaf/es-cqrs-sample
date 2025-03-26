@@ -18,8 +18,7 @@ model Event {
   aggregateId       String   @map("aggregate_id")
   aggregateRevision Int      @map("aggregate_revision")
   type              String
-  timeObserved      DateTime @map("time_observed")
-  timeOccurred      DateTime @map("time_occurred")
+  createdAt         DateTime @default(now()) @map("created_at")
   data              Json
 
   @@index([aggregateId])

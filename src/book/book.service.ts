@@ -62,8 +62,6 @@ export class BookService {
       aggregateId: bookEvent.bookId,
       aggregateRevision: count + 1,
       type: bookEvent.type,
-      timeObserved: new Date(), // TODO: get from request
-      timeOccurred: new Date(),
       data: bookEvent.data,
     };
 
