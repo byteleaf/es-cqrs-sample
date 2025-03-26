@@ -14,7 +14,7 @@ import { Condition } from './enums/condition.enum';
 const SNAPSHOT_THRESHOLD = 3;
 
 @Injectable()
-export class BookService {
+export class BookCommandService {
   constructor(
     private readonly eventStore: EventStoreService,
     private readonly snapshotService: SnapshotService,
@@ -177,9 +177,5 @@ export class BookService {
     for (const event of events) {
       await this.projector.applyEvent(event);
     }
-  }
-
-  queryBook(id: string) {
-    return this.projector.queryBook(id);
   }
 }

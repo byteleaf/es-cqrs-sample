@@ -7,7 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { BookService } from './book.service';
+import { BookCommandService } from './book-command.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { RegisterBookCommand } from './commands/register-book.command';
 import { BorrowBookCommand } from './commands/borrow-book.command';
@@ -15,53 +15,48 @@ import { ReturnBookCommand } from './commands/return-book.command';
 import { RepairBookCommand } from './commands/repair-book.command';
 import { RemoveBookCommand } from './commands/remove-book.command';
 
-@Controller('v1/books')
-export class BookController {
-  constructor(private readonly bookService: BookService) {}
+@Controller('v1/books/commands')
+export class BookCommandController {
+  constructor(private readonly bookCommandService: BookCommandService) {}
 
   @Post('register')
   registerBook(@Body() registerBookCommand: RegisterBookCommand) {
-    return this.bookService.registerBook(registerBookCommand);
+    return this.bookCommandService.registerBook(registerBookCommand);
   }
 
   @ApiOperation({ summary: 'Borrow a book' })
   @Post('borrow')
   @HttpCode(204)
   borrowBook(@Body() borrowBookCommand: BorrowBookCommand) {
-    return this.bookService.borrowBook(borrowBookCommand);
+    return this.bookCommandService.borrowBook(borrowBookCommand);
   }
 
   @Post('return')
   @HttpCode(204)
   returnBook(@Body() returnBookCommand: ReturnBookCommand) {
-    return this.bookService.returnBook(returnBookCommand);
+    return this.bookCommandService.returnBook(returnBookCommand);
   }
 
   @Post('repair')
   @HttpCode(204)
   repairBook(@Body() repairBookCommand: RepairBookCommand) {
-    return this.bookService.repairBook(repairBookCommand);
+    return this.bookCommandService.repairBook(repairBookCommand);
   }
 
   @Post('remove')
   @HttpCode(204)
   removeBook(@Body() removeBookCommand: RemoveBookCommand) {
-    return this.bookService.removeBook(removeBookCommand);
+    return this.bookCommandService.removeBook(removeBookCommand);
   }
 
   @Get('state/:id')
   getBookState(@Param('id') id: string, @Query('revision') revision?: number) {
-    return this.bookService.getBookState(id, revision);
-  }
-
-  @Get(':id')
-  queryBook(@Param('id') id: string) {
-    return this.bookService.queryBook(id);
+    return this.bookCommandService.getBookState(id, revision);
   }
 
   @Post('replay/:id')
   @HttpCode(204)
   replayEvents(@Param('id') id: string, @Query('revision') revision?: number) {
-    return this.bookService.replayEvents(id, revision);
+    return this.bookCommandService.replayEvents(id, revision);
   }
 }

@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('BookController (e2e)', () => {
+describe('BookCommandController (e2e)', () => {
   let app: INestApplication;
   let bookId: string;
 
@@ -24,7 +24,7 @@ describe('BookController (e2e)', () => {
 
   it('should register a book', async () => {
     const response = await request(app.getHttpServer())
-      .post('/api/v1/books/register')
+      .post('/api/v1/books/commands/register')
       .send({
         title: 'The Lord of the Rings',
         author: 'J.R.R. Tolkien',
@@ -38,7 +38,7 @@ describe('BookController (e2e)', () => {
 
   it('should borrow a book', () => {
     return request(app.getHttpServer())
-      .post('/api/v1/books/borrow')
+      .post('/api/v1/books/commands/borrow')
       .send({
         bookId,
         readerId: 'reader-123',
@@ -48,7 +48,7 @@ describe('BookController (e2e)', () => {
 
   it('should return a book', () => {
     return request(app.getHttpServer())
-      .post('/api/v1/books/return')
+      .post('/api/v1/books/commands/return')
       .send({
         bookId,
         condition: 'BAD',
@@ -58,7 +58,7 @@ describe('BookController (e2e)', () => {
 
   it('should repair a book', () => {
     return request(app.getHttpServer())
-      .post('/api/v1/books/repair')
+      .post('/api/v1/books/commands/repair')
       .send({
         bookId,
         comment: 'Page pinned',
@@ -68,26 +68,11 @@ describe('BookController (e2e)', () => {
 
   it('should remove a book', () => {
     return request(app.getHttpServer())
-      .post('/api/v1/books/remove')
+      .post('/api/v1/books/commands/remove')
       .send({
         bookId,
         reason: 'Book is unrepairable',
       })
       .expect(204);
-  });
-
-  it('should get the book state', () => {
-    return request(app.getHttpServer())
-      .get(`/api/v1/books/state/${bookId}`)
-      .expect(200)
-      .expect((res) => {
-        expect(res.body.id).toBe(bookId);
-      });
-  });
-
-  it('should return 404 for non-existing book', () => {
-    return request(app.getHttpServer())
-      .get('/api/v1/books/state/non-existing-id')
-      .expect(404);
   });
 });

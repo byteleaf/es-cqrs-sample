@@ -1,5 +1,7 @@
+## Command Part
+
 ### Register a book
-POST http://localhost:3000/api/v1/books/register
+POST http://localhost:3000/api/v1/books/commands/register
 Content-Type: application/json
 
 {
@@ -13,7 +15,7 @@ Content-Type: application/json
 %}
 
 ### Borrow a book
-POST http://localhost:3000/api/v1/books/borrow
+POST http://localhost:3000/api/v1/books/commands/borrow
 Content-Type: application/json
 
 {
@@ -22,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Return a book
-POST http://localhost:3000/api/v1/books/return
+POST http://localhost:3000/api/v1/books/commands/return
 Content-Type: application/json
 
 {
@@ -31,7 +33,7 @@ Content-Type: application/json
 }
 
 ### Repair a book
-POST http://localhost:3000/api/v1/books/repair
+POST http://localhost:3000/api/v1/books/commands/repair
 Content-Type: application/json
 
 {
@@ -40,7 +42,7 @@ Content-Type: application/json
 }
 
 ### Remove a book
-POST http://localhost:3000/api/v1/books/remove
+POST http://localhost:3000/api/v1/books/commands/remove
 Content-Type: application/json
 
 {
@@ -48,14 +50,17 @@ Content-Type: application/json
   "reason": "Book is unrepairable"
 }
 
-### Get a book
-GET http://localhost:3000/api/v1/books/{{bookId}}
-
 ### Get a book state
-GET http://localhost:3000/api/v1/books/state/{{bookId}}
+GET http://localhost:3000/api/v1/books/commands/state/{{bookId}}
 
 ### Get a book state on Revision 2
-GET http://localhost:3000/api/v1/books/state/{{bookId}}?revision=2
+GET http://localhost:3000/api/v1/books/commands/state/{{bookId}}?revision=2
 
 ### Replay the last event
-POST http://localhost:3000/api/v1/books/replay/{{bookId}}
+POST http://localhost:3000/api/v1/books/commands/replay/{{bookId}}
+
+
+### Query a book
+GET http://localhost:3000/api/v1/books/queries/{{bookId}}
+
+

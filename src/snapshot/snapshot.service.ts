@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { BookState } from '../book/aggregates/book.aggregate';
+import { BookState } from '../book-command/aggregates/book.aggregate';
 
 @Injectable()
 export class SnapshotService {

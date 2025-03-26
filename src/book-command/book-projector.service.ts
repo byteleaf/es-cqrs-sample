@@ -4,7 +4,7 @@ import { BookStatus, Event, Prisma } from '@prisma/client';
 
 @Injectable()
 export class BookProjectorService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaService: PrismaService) {}
 
   async applyEvent(event: Event | Prisma.EventCreateInput) {
     const { type, aggregateId: bookId, data } = event;
@@ -16,7 +16,7 @@ export class BookProjectorService {
           author: string;
           isbn: string;
         }; // TODO: fix type
-        await this.prisma.book.upsert({
+        await this.prismaService.book.upsert({
           where: { bookId: bookId },
           create: {
             bookId,
@@ -34,14 +34,14 @@ export class BookProjectorService {
         });
         break;
       case 'BookBorrowed':
-        await this.prisma.book.update({
+        await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.BORROWED },
         });
         break;
       case 'BookReturned':
         const { condition } = data as Prisma.JsonObject;
-        await this.prisma.book.update({
+        await this.prismaService.book.update({
           where: { bookId },
           data: {
             status:
@@ -50,21 +50,17 @@ export class BookProjectorService {
         });
         break;
       case 'BookRepaired':
-        await this.prisma.book.update({
+        await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.REPAIRED },
         });
         break;
       case 'BookRemoved':
-        await this.prisma.book.update({
+        await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.REMOVED },
         });
         break;
     }
-  }
-
-  queryBook(id: string) {
-    return this.prisma.book.findUnique({ where: { bookId: id } });
   }
 }
