@@ -51,7 +51,7 @@ describe('BookController (e2e)', () => {
       .post('/api/v1/books/return')
       .send({
         bookId,
-        condition: 'bad',
+        condition: 'BAD',
       })
       .expect(204);
   });

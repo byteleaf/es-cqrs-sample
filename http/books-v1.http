@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "bookId": "{{bookId}}",
-  "condition": "bad"
+  "condition": "BAD"
 }
 
 ### Repair a book

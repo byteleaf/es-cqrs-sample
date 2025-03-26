@@ -8,45 +8,45 @@ import {
   Query,
 } from '@nestjs/common';
 import { BookService } from './book.service';
-import { BookRegistration } from './dto/book-registration.dto';
-import { BookBorrow } from './dto/book-borrow.dto';
-import { BookReturn } from './dto/book-return.dto';
-import { BookRepair } from './dto/book-repair.dto';
-import { BookRemove } from './dto/book-remove.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { RegisterBookCommand } from './commands/register-book.command';
+import { BorrowBookCommand } from './commands/borrow-book.command';
+import { ReturnBookCommand } from './commands/return-book.command';
+import { RepairBookCommand } from './commands/repair-book.command';
+import { RemoveBookCommand } from './commands/remove-book.command';
 
 @Controller('v1/books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post('register')
-  registerBook(@Body() bookRegistration: BookRegistration) {
-    return this.bookService.registerBook(bookRegistration);
+  registerBook(@Body() registerBookCommand: RegisterBookCommand) {
+    return this.bookService.registerBook(registerBookCommand);
   }
 
   @ApiOperation({ summary: 'Borrow a book' })
   @Post('borrow')
   @HttpCode(204)
-  borrowBook(@Body() bookBorrow: BookBorrow) {
-    return this.bookService.borrowBook(bookBorrow);
+  borrowBook(@Body() borrowBookCommand: BorrowBookCommand) {
+    return this.bookService.borrowBook(borrowBookCommand);
   }
 
   @Post('return')
   @HttpCode(204)
-  returnBook(@Body() bookReturn: BookReturn) {
-    return this.bookService.returnBook(bookReturn);
+  returnBook(@Body() returnBookCommand: ReturnBookCommand) {
+    return this.bookService.returnBook(returnBookCommand);
   }
 
   @Post('repair')
   @HttpCode(204)
-  repairBook(@Body() bookRepair: BookRepair) {
-    return this.bookService.repairBook(bookRepair);
+  repairBook(@Body() repairBookCommand: RepairBookCommand) {
+    return this.bookService.repairBook(repairBookCommand);
   }
 
   @Post('remove')
   @HttpCode(204)
-  removeBook(@Body() bookRepair: BookRemove) {
-    return this.bookService.removeBook(bookRepair);
+  removeBook(@Body() removeBookCommand: RemoveBookCommand) {
+    return this.bookService.removeBook(removeBookCommand);
   }
 
   @Get('state/:id')

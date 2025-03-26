@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { EventStoreService } from '../event-store/event-store.service';
 import { BookProjectorService } from './book-projector.service';
-import { BookAggregate, BookState } from './aggregate/book.aggregate';
 import { BookStatus, Prisma } from '@prisma/client';
 import { BookEvent } from './events/book.events';
-import { Condition } from './types/condition.type';
 import { SnapshotService } from '../snapshot/snapshot.service';
+import { BookAggregate, BookState } from './aggregates/book.aggregate';
+import { Condition } from './enums/condition.enum';
 
 const SNAPSHOT_THRESHOLD = 3;
 

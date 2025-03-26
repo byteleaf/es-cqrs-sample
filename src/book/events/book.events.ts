@@ -1,4 +1,4 @@
-import { Condition } from '../types/condition.type';
+import { Condition } from '../enums/condition.type';
 
 type BaseBookEvent = {
   bookId: string;
