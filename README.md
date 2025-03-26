@@ -4,7 +4,7 @@
 
 Modern software systems often face the challenge of managing data consistently while ensuring a high level of scalability and traceability. Two architectural patterns that can help with this are event sourcing and CQRS (Command Query Responsibility Segregation).
 
-## Event Sourcing
+## Event Sourcing (ES)
 
 Event sourcing is an architectural principle in which the status of a system is not stored in the form of current data, but as a sequence of events. Every change is logged as an immutable event so that the entire history of a system can be traced at any time.
 
@@ -23,13 +23,23 @@ Each of these events describes a change in the system. To determine the current 
 ![Event Sourcing Diagram](doc/png/event-sourcing.png)
 
 
+## Command Query Responsibility Segregation (CQRS)
+
+Command Query Responsibility Segregation is an architectural pattern in which the processing of commands and queries is separated. Commands are change requests that change the state of the system, while queries retrieve information from the system without changing the state.
+
+![Projection Diagram](doc/png/cqrs.png)
+
 ### Projections
 
+A Projection is the read model built from events.
+It represents the current state of something, derived by processing a stream of historical events.
+
+- Think of it like a materialized view of your data.
+- It is not stored in the event store (which only stores events). It can be an extra table in the same database as the events, but also a completely separate storage (SQL, NoSQL, Elasticsearch, Redis etc.) that is optimized for fast queries
+
+Projections are rebuildable at any time by replaying the event stream.
+
 ![Projection Diagram](doc/png/projection.png)
-
-## CQRS
-
-CQRS stands for Command Query Responsibility Segregation and is an architectural pattern in which the processing of commands and queries is separated. Commands are change requests that change the state of the system, while queries retrieve information from the system without changing the state.
 
 
 
