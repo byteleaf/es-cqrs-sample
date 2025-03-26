@@ -22,6 +22,19 @@ Each of these events describes a change in the system. To determine the current 
 
 ![Event Sourcing Diagram](doc/png/event-sourcing.png)
 
+### Events Table (Event Store)
+
+The event store (event table) stores all events in the system. It is the source of truth for the system's history.
+
+| Column             | Description                   |
+|--------------------|-------------------------------|
+| id                 | Unique identifier             |
+| aggregate_id       | ID of the sourced entity      |
+| aggregate_revision | Sequence number of the entity |
+| type               | Type of event                 |
+| createdAt          | Event timestamp               |
+| data               | Event data                    |
+
 ### Advantages:
 - Traceability & historization: Every change is retained as an event.
 - Reproducibility: The condition can be reconstructed at any time.
@@ -76,6 +89,17 @@ It represents the current state of something, derived by processing a stream of 
 
 ![Projection Diagram](doc/png/projection.png)
 
+## Snapshots
+
+As the number of events increases, replaying all events to reconstruct the current state can become slow. 
+To mitigate this, snapshots capture the state of an aggregate at a specific point in time, allowing you to load from that snapshot and replay only the newer events.
+
+Several strategies can be used to determine when to create a snapshot:
+- Count-base: Create a snapshot every N events.
+- Time-based: Create a snapshot every day/hour/week etc.
+- Event-based: Create a snapshot every time a specific event occurs.
+
+![Projection Diagram](doc/png/snapshot.png)
 
 ## Installation
 
