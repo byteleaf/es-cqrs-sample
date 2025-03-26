@@ -49,9 +49,14 @@ export class BookController {
     return this.bookService.removeBook(bookRepair);
   }
 
-  @Get(':id')
+  @Get('state/:id')
   getBookState(@Param('id') id: string, @Query('revision') revision?: number) {
     return this.bookService.getBookState(id, revision);
+  }
+
+  @Get(':id')
+  queryBook(@Param('id') id: string) {
+    return this.bookService.queryBook(id);
   }
 
   @Post('replay/:id')

@@ -19,6 +19,10 @@ export type BookEvent =
       data: { condition: Condition };
     })
   | (BaseBookEvent & {
+      type: 'BookDamaged';
+      data: { comment: string };
+    })
+  | (BaseBookEvent & {
       type: 'BookRepaired';
       data: { comment: string };
     })

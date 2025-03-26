@@ -63,4 +63,8 @@ export class BookProjectorService {
         break;
     }
   }
+
+  queryBook(id: string) {
+    return this.prisma.book.findUnique({ where: { bookId: id } });
+  }
 }

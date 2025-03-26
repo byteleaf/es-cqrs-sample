@@ -51,8 +51,11 @@ Content-Type: application/json
 ### Get a book
 GET http://localhost:3000/api/v1/books/{{bookId}}
 
-### Get a book on Revision 2
-GET http://localhost:3000/api/v1/books/{{bookId}}?revision=2
+### Get a book state
+GET http://localhost:3000/api/v1/books/state/{{bookId}}
+
+### Get a book state on Revision 2
+GET http://localhost:3000/api/v1/books/state/{{bookId}}?revision=2
 
 ### Replay the last event
 POST http://localhost:3000/api/v1/books/replay/{{bookId}}

@@ -180,4 +180,8 @@ export class BookService {
       await this.projector.applyEvent(event);
     }
   }
+
+  queryBook(id: string) {
+    return this.projector.queryBook(id);
+  }
 }
