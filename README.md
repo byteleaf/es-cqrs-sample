@@ -69,10 +69,10 @@ It represents the current state of something, derived by processing a stream of 
 - Projections are rebuildable at any time by replaying the event stream.
 
 
-| Concept | Description                                                   |
-| ---  |---------------------------------------------------------------|
-| Projection | A materialized view of state built from events (read model).  |
-| Projector | A component that (listens to events and) updates projections. |
+| Concept | Description                                                   | Example                      |
+| ---  |---------------------------------------------------------------|------------------------------|
+| Projection | A materialized view of state built from events (read model).  | Book State   (Table / Entry) |
+| Projector | A component that (listens to events and) updates projections. | Book Projector (Code)        |
 
 ![Projection Diagram](doc/png/projection.png)
 
