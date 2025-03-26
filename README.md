@@ -2,21 +2,22 @@
 
 ## Introduction
 
-Moderne Softwaresysteme stehen oft vor der Herausforderung, Daten konsistent zu verwalten und gleichzeitig eine hohe Skalierbarkeit und Nachvollziehbarkeit zu gewährleisten. Zwei Architekturmuster, die dabei helfen können, sind Event Sourcing und CQRS (Command Query Responsibility Segregation).
+Modern software systems often face the challenge of managing data consistently while ensuring a high level of scalability and traceability. Two architectural patterns that can help with this are event sourcing and CQRS (Command Query Responsibility Segregation).
 
 ## Event Sourcing
-Event Sourcing ist ein Architekturprinzip, bei dem der Zustand eines Systems nicht in Form von aktuellen Daten gespeichert wird, sondern als eine Sequenz von Ereignissen (Events). Jede Änderung wird als unveränderliches Event protokolliert, sodass der gesamte Verlauf eines Systems jederzeit nachvollziehbar bleibt.
 
-Ein Beispiel aus einem Bibliothekssystem:
+Event sourcing is an architectural principle in which the status of a system is not stored in the form of current data, but as a sequence of events. Every change is logged as an immutable event so that the entire history of a system can be traced at any time.
 
-- BookRegistered → Ein neues Buch wird in den Bestand aufgenommen.
-- BookBorrowed → Ein Leser leiht ein Buch aus.
-- BookReturned → Ein Buch wird zurückgegeben.
-- BookDamaged → Ein Buch wird als beschädigt markiert.
-- BookRepaired → Ein beschädigtes Buch wurde repariert.
-- BookRemoved → Das Buch wird aus dem System entfernt (Verlust oder Alter)
+An example from a library system:
 
-Jedes dieser Events beschreibt eine Veränderung im System. Um den aktuellen Zustand eines Buches zu ermitteln, werden alle relevanten Events in der Reihenfolge ihrer Entstehung angewendet.
+- BookRegistered → A new book is added to the system.
+- BookBorrowed → A reader borrows a book.
+- BookReturned → A book is returned.
+- BookDamaged → A book is marked as damaged.
+- BookRepaired → A damaged book has been repaired.
+- BookRemoved → The book is removed from the system (loss or non-repairable).
+
+Each of these events describes a change in the system. To determine the current status of a book, all relevant events are applied in the order in which they occur.
 
 
 ![Event Sourcing Diagram](doc/png/event-sourcing.png)
@@ -27,7 +28,8 @@ Jedes dieser Events beschreibt eine Veränderung im System. Um den aktuellen Zus
 ![Projection Diagram](doc/png/projection.png)
 
 ## CQRS
-CQRS steht für Command Query Responsibility Segregation und ist ein Architekturmuster, bei dem die Verarbeitung von Befehlen (Commands) und Abfragen (Queries) getrennt wird. Befehle sind Änderungsanforderungen, die den Zustand des Systems verändern, während Abfragen Informationen aus dem System abrufen, ohne den Zustand zu verändern.
+
+CQRS stands for Command Query Responsibility Segregation and is an architectural pattern in which the processing of commands and queries is separated. Commands are change requests that change the state of the system, while queries retrieve information from the system without changing the state.
 
 
 
@@ -63,16 +65,4 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
