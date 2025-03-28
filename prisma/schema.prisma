@@ -44,11 +44,11 @@ model Book {
 }
 
 model Snapshot {
-  id          String   @id @default(uuid())
-  aggregateId String   @map("aggregate_id")
-  revision    Int
-  state       Json
-  createdAt   DateTime @default(now()) @map("created_at")
+  id                String   @id @default(uuid())
+  aggregateId       String   @map("aggregate_id")
+  aggregateRevision Int      @map("aggregate_revision")
+  state             Json
+  createdAt         DateTime @default(now()) @map("created_at")
 
   @@index([aggregateId])
   @@map("snapshots")

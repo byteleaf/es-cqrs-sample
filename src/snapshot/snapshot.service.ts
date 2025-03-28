@@ -1,28 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { BookState } from '../book-command/aggregates/book.aggregate';
+import { Prisma, Snapshot } from '@prisma/client';
 
 @Injectable()
 export class SnapshotService {
   constructor(private prismaService: PrismaService) {}
 
-  async saveSnapshot(aggregateId: string, revision: number, state: BookState) {
+  async appendSnapshot(
+    aggregateId: string,
+    aggregateRevision: number,
+    state: Prisma.JsonValue,
+  ) {
     await this.prismaService.snapshot.create({
       data: {
         aggregateId,
-        revision,
+        aggregateRevision,
         state,
       },
     });
   }
 
-  async getLatestSnapshotOnRevision(aggregateId: string, revision?: number) {
+  async getLatestSnapshotOnRevision(
+    aggregateId: string,
+    revision?: number,
+  ): Promise<Snapshot | null> {
     return this.prismaService.snapshot.findFirst({
       where: {
         aggregateId,
-        revision: revision ? { lte: revision } : undefined,
+        aggregateRevision: revision ? { lte: revision } : undefined,
       },
-      orderBy: { revision: 'desc' },
+      orderBy: { aggregateRevision: 'desc' },
     });
   }
 }

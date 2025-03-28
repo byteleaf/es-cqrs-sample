@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookStatus, Event, Prisma } from '@prisma/client';
 import { OnEvent } from '@nestjs/event-emitter';
-import { BookEventTypes } from '../common/enums/book-event-types.enum';
+import { BookEventTypes } from './shared/book-event-types.enum';
 
 @Injectable()
 export class BookProjectorService {
@@ -12,8 +12,7 @@ export class BookProjectorService {
 
   @OnEvent('book.*')
   async handleOrderCreatedEvent(event: Event | Prisma.EventCreateInput) {
-    // handle and process "OrderCreatedEvent" event
-    this.logger.log(`Received event: ${event.type}: ${JSON.stringify(event)}`);
+    this.logger.log(`Received event: ${event.type}`);
     await this.applyEvent(event);
   }
 

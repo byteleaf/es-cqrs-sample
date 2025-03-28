@@ -29,7 +29,7 @@ CREATE TABLE "books" (
 CREATE TABLE "snapshots" (
     "id" TEXT NOT NULL,
     "aggregate_id" TEXT NOT NULL,
-    "revision" INTEGER NOT NULL,
+    "aggregate_revision" INTEGER NOT NULL,
     "state" JSONB NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

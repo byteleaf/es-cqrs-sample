@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BookQueryController } from './book-query.controller';
-import { PrismaModule } from '../prisma/prisma.module';
 import { BookQueryService } from './book-query.service';
+import { PrismaModule } from '../../prisma/prisma.module';
 
 describe('BookQueryController', () => {
   let controller: BookQueryController;

@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BookCommandController } from './book-command.controller';
 import { BookCommandService } from './book-command.service';
-import { EventStoreModule } from '../event-store/event-store.module';
-import { PrismaModule } from '../prisma/prisma.module';
-import { SnapshotModule } from '../snapshot/snapshot.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PrismaModule } from '../../prisma/prisma.module';
+import { EventStoreModule } from '../../event-store/event-store.module';
+import { SnapshotModule } from '../../snapshot/snapshot.module';
 
-describe('BookCommandController', () => {
-  let controller: BookCommandController;
+describe('BookCommandService', () => {
+  let service: BookCommandService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [BookCommandController],
       providers: [BookCommandService],
       imports: [
         PrismaModule,
@@ -21,10 +19,10 @@ describe('BookCommandController', () => {
       ],
     }).compile();
 
-    controller = module.get<BookCommandController>(BookCommandController);
+    service = module.get<BookCommandService>(BookCommandService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });

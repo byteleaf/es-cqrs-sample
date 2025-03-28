@@ -6,8 +6,20 @@ import { Event, Prisma } from '@prisma/client';
 export class EventStoreService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async appendEvent(event: Prisma.EventCreateInput) {
-    await this.prismaService.event.create({ data: event });
+  async appendEvent(
+    aggregateId: string,
+    aggregateRevision: number,
+    type: string,
+    data: Prisma.JsonValue,
+  ) {
+    return this.prismaService.event.create({
+      data: {
+        aggregateId,
+        aggregateRevision,
+        type,
+        data,
+      },
+    });
   }
 
   async getEventsByAggregateId(

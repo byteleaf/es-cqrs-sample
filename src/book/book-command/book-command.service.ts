@@ -4,14 +4,14 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { EventStoreService } from '../event-store/event-store.service';
-import { BookStatus, Event, Prisma } from '@prisma/client';
+import { BookStatus, Event } from '@prisma/client';
 import { BookEvent } from './events/book.events';
-import { SnapshotService } from '../snapshot/snapshot.service';
 import { BookAggregate, BookState } from './aggregates/book.aggregate';
 import { Condition } from './enums/condition.enum';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { BookEventTypes } from '../common/enums/book-event-types.enum';
+import { EventStoreService } from '../../event-store/event-store.service';
+import { SnapshotService } from '../../snapshot/snapshot.service';
+import { BookEventTypes } from '../shared/book-event-types.enum';
 
 const SNAPSHOT_THRESHOLD = 3;
 
@@ -38,7 +38,7 @@ export class BookCommandService {
 
     const events = await this.eventStore.getEventsByAggregateIdAfterRevision(
       aggregateId,
-      snapshot?.revision ?? 0,
+      snapshot?.aggregateRevision ?? 0,
       revision,
     );
 
@@ -49,7 +49,7 @@ export class BookCommandService {
     if (snapshot) {
       aggregate.loadFromSnapshot(
         snapshot.state as BookState,
-        snapshot.revision,
+        snapshot.aggregateRevision,
       );
     }
 
@@ -60,22 +60,27 @@ export class BookCommandService {
   }
 
   private async recordAndApply(bookEvent: BookEvent) {
-    const count = await this.eventStore.getCountByAggregateId(bookEvent.bookId);
+    const newRevision =
+      (await this.eventStore.getCountByAggregateId(bookEvent.bookId)) + 1;
 
-    const event: Prisma.EventCreateInput = {
-      aggregateId: bookEvent.bookId,
-      aggregateRevision: count + 1,
-      type: bookEvent.type,
-      data: bookEvent.data,
-    };
+    const storedEvent = await this.eventStore.appendEvent(
+      bookEvent.bookId,
+      newRevision,
+      bookEvent.type,
+      bookEvent.data,
+    );
+    await this.emitEvent(storedEvent);
+    await this.createSnapshotIfNeeded(bookEvent, newRevision);
+  }
 
-    await this.eventStore.appendEvent(event);
-    this.emitEvent(event);
-
-    if ((count + 1) % SNAPSHOT_THRESHOLD === 0) {
+  private async createSnapshotIfNeeded(
+    bookEvent: BookEvent,
+    newRevision: number,
+  ) {
+    if (newRevision % SNAPSHOT_THRESHOLD === 0) {
       const aggregate = await this.rehydrate(bookEvent.bookId);
       const state = aggregate.getState();
-      await this.snapshotService.saveSnapshot(
+      await this.snapshotService.appendSnapshot(
         bookEvent.bookId,
         state.revision,
         state,
@@ -181,12 +186,12 @@ export class BookCommandService {
     );
 
     for (const event of events) {
-      this.emitEvent(event);
+      await this.emitEvent(event);
     }
   }
 
-  private emitEvent(event: Event | Prisma.EventCreateInput) {
-    this.logger.log('Emit event: ' + event.type);
-    this.eventEmitter.emit(event.type, event);
+  private async emitEvent(event: Event) {
+    this.logger.log('Emitting event: ' + event.type);
+    await this.eventEmitter.emitAsync(event.type, event);
   }
 }
