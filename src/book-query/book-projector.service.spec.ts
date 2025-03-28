@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BookCommandService } from './book-command.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { EventStoreModule } from '../event-store/event-store.module';
 import { BookProjectorService } from './book-projector.service';
@@ -10,7 +9,7 @@ describe('BookProjectorService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BookCommandService, BookProjectorService],
+      providers: [BookProjectorService],
       imports: [PrismaModule, EventStoreModule, SnapshotModule],
     }).compile();
 

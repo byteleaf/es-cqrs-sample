@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { Condition } from '../src/book-command/enums/condition.enum';
 
 describe('BookCommandController (e2e)', () => {
   let app: INestApplication;
@@ -51,7 +52,7 @@ describe('BookCommandController (e2e)', () => {
       .post('/api/v1/books/commands/return')
       .send({
         bookId,
-        condition: 'BAD',
+        condition: Condition.Bad,
       })
       .expect(204);
   });

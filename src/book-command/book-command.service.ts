@@ -1,24 +1,28 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { EventStoreService } from '../event-store/event-store.service';
-import { BookProjectorService } from './book-projector.service';
-import { BookStatus, Prisma } from '@prisma/client';
+import { BookStatus, Event, Prisma } from '@prisma/client';
 import { BookEvent } from './events/book.events';
 import { SnapshotService } from '../snapshot/snapshot.service';
 import { BookAggregate, BookState } from './aggregates/book.aggregate';
 import { Condition } from './enums/condition.enum';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { BookEventTypes } from '../common/enums/book-event-types.enum';
 
 const SNAPSHOT_THRESHOLD = 3;
 
 @Injectable()
 export class BookCommandService {
+  private readonly logger = new Logger(BookCommandService.name);
+
   constructor(
     private readonly eventStore: EventStoreService,
     private readonly snapshotService: SnapshotService,
-    private readonly projector: BookProjectorService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async rehydrate(
@@ -66,7 +70,7 @@ export class BookCommandService {
     };
 
     await this.eventStore.appendEvent(event);
-    await this.projector.applyEvent(event);
+    this.emitEvent(event);
 
     if ((count + 1) % SNAPSHOT_THRESHOLD === 0) {
       const aggregate = await this.rehydrate(bookEvent.bookId);
@@ -90,9 +94,11 @@ export class BookCommandService {
   }) {
     const event: BookEvent = {
       bookId: crypto.randomUUID(),
-      type: 'BookRegistered',
+      type: BookEventTypes.BookRegistered,
       data: { isbn, title, author },
     };
+
+    this.logger.log(`Registering book with ISBN: ${isbn}`);
 
     await this.recordAndApply(event);
     return {
@@ -107,7 +113,7 @@ export class BookCommandService {
       throw new ConflictException('Book not available');
 
     const event: BookEvent = {
-      type: 'BookBorrowed',
+      type: BookEventTypes.BookBorrowed,
       bookId: bookId,
       data: { readerId },
     };
@@ -127,7 +133,7 @@ export class BookCommandService {
       throw new ConflictException('Book not borrowed');
 
     const event: BookEvent = {
-      type: 'BookReturned',
+      type: BookEventTypes.BookReturned,
       bookId: bookId,
       data: { condition },
     };
@@ -141,7 +147,7 @@ export class BookCommandService {
       throw new ConflictException('Book not damaged');
 
     const event: BookEvent = {
-      type: 'BookRepaired',
+      type: BookEventTypes.BookRepaired,
       bookId: bookId,
       data: { comment },
     };
@@ -155,7 +161,7 @@ export class BookCommandService {
       throw new ConflictException('Already removed');
 
     const event: BookEvent = {
-      type: 'BookRemoved',
+      type: BookEventTypes.BookRemoved,
       bookId: bookId,
       data: { reason },
     };
@@ -175,7 +181,12 @@ export class BookCommandService {
     );
 
     for (const event of events) {
-      await this.projector.applyEvent(event);
+      this.emitEvent(event);
     }
+  }
+
+  private emitEvent(event: Event | Prisma.EventCreateInput) {
+    this.logger.log('Emit event: ' + event.type);
+    this.eventEmitter.emit(event.type, event);
   }
 }

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "BookStatus" AS ENUM ('AVAILABLE', 'BORROWED', 'DAMAGED', 'REPAIRED', 'REMOVED');
+CREATE TYPE "BookStatus" AS ENUM ('AVAILABLE', 'BORROWED', 'DAMAGED', 'REMOVED');
 
 -- CreateTable
 CREATE TABLE "events" (

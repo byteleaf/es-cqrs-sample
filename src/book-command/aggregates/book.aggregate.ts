@@ -1,4 +1,5 @@
 import { BookStatus, Event, Prisma } from '@prisma/client';
+import { BookEventTypes } from '../../common/enums/book-event-types.enum';
 
 export type BookState = {
   id: string;
@@ -23,14 +24,14 @@ export class BookAggregate {
 
   apply(event: Event) {
     switch (event.type) {
-      case 'BookRegistered':
+      case BookEventTypes.BookRegistered:
         this.state = {
           ...this.state,
           ...(event.data as Prisma.JsonObject),
           status: BookStatus.AVAILABLE,
         };
         break;
-      case 'BookBorrowed':
+      case BookEventTypes.BookBorrowed:
         const { readerId } = event.data as Prisma.JsonObject;
         this.state = {
           ...this.state,
@@ -38,7 +39,7 @@ export class BookAggregate {
           readerId: readerId as string, //TODO: fix type
         };
         break;
-      case 'BookReturned':
+      case BookEventTypes.BookReturned:
         this.state = {
           ...this.state,
           status:
@@ -48,13 +49,13 @@ export class BookAggregate {
           readerId: null,
         };
         break;
-      case 'BookRepaired':
+      case BookEventTypes.BookRepaired:
         this.state = {
           ...this.state,
           status: BookStatus.AVAILABLE,
         };
         break;
-      case 'BookRemoved':
+      case BookEventTypes.BookRemoved:
         this.state = {
           ...this.state,
           status: BookStatus.REMOVED,

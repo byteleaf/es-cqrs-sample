@@ -1,4 +1,5 @@
 import { Condition } from '../enums/condition.enum';
+import { BookEventTypes } from '../../common/enums/book-event-types.enum';
 
 type BaseBookEvent = {
   bookId: string;
@@ -6,27 +7,27 @@ type BaseBookEvent = {
 
 export type BookEvent =
   | (BaseBookEvent & {
-      type: 'BookRegistered';
+      type: BookEventTypes.BookRegistered;
       data: { title: string; author: string; isbn: string };
     })
   | (BaseBookEvent & {
-      type: 'BookBorrowed';
+      type: BookEventTypes.BookBorrowed;
       bookId: string;
       data: { readerId: string };
     })
   | (BaseBookEvent & {
-      type: 'BookReturned';
+      type: BookEventTypes.BookReturned;
       data: { condition: Condition };
     })
   | (BaseBookEvent & {
-      type: 'BookDamaged';
+      type: BookEventTypes.BookDamaged;
       data: { comment: string };
     })
   | (BaseBookEvent & {
-      type: 'BookRepaired';
+      type: BookEventTypes.BookRepaired;
       data: { comment: string };
     })
   | (BaseBookEvent & {
-      type: 'BookRemoved';
+      type: BookEventTypes.BookRemoved;
       data: { reason: string };
     });

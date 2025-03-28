@@ -1,16 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookStatus, Event, Prisma } from '@prisma/client';
+import { OnEvent } from '@nestjs/event-emitter';
+import { BookEventTypes } from '../common/enums/book-event-types.enum';
 
 @Injectable()
 export class BookProjectorService {
+  private readonly logger = new Logger(BookProjectorService.name);
+
   constructor(private prismaService: PrismaService) {}
+
+  @OnEvent('book.*')
+  async handleOrderCreatedEvent(event: Event | Prisma.EventCreateInput) {
+    // handle and process "OrderCreatedEvent" event
+    this.logger.log(`Received event: ${event.type}: ${JSON.stringify(event)}`);
+    await this.applyEvent(event);
+  }
 
   async applyEvent(event: Event | Prisma.EventCreateInput) {
     const { type, aggregateId: bookId, data } = event;
 
     switch (type) {
-      case 'BookRegistered':
+      case BookEventTypes.BookRegistered:
         const { title, author, isbn } = data as {
           title: string;
           author: string;
@@ -33,13 +44,13 @@ export class BookProjectorService {
           },
         });
         break;
-      case 'BookBorrowed':
+      case BookEventTypes.BookBorrowed:
         await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.BORROWED },
         });
         break;
-      case 'BookReturned':
+      case BookEventTypes.BookReturned:
         const { condition } = data as Prisma.JsonObject;
         await this.prismaService.book.update({
           where: { bookId },
@@ -49,13 +60,19 @@ export class BookProjectorService {
           },
         });
         break;
-      case 'BookRepaired':
+      case BookEventTypes.BookDamaged:
         await this.prismaService.book.update({
           where: { bookId },
-          data: { status: BookStatus.REPAIRED },
+          data: { status: BookStatus.DAMAGED },
         });
         break;
-      case 'BookRemoved':
+      case BookEventTypes.BookRepaired:
+        await this.prismaService.book.update({
+          where: { bookId },
+          data: { status: BookStatus.AVAILABLE },
+        });
+        break;
+      case BookEventTypes.BookRemoved:
         await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.REMOVED },
