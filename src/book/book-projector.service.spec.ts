@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaModule } from '../prisma/prisma.module';
-import { EventStoreModule } from '../event-store/event-store.module';
 import { BookProjectorService } from './book-projector.service';
-import { SnapshotModule } from '../snapshot/snapshot.module';
+import { EventSourcingModule } from '../event-sourcing/event-sourcing.module';
 
 describe('BookProjectorService', () => {
   let service: BookProjectorService;
@@ -10,7 +9,7 @@ describe('BookProjectorService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [BookProjectorService],
-      imports: [PrismaModule, EventStoreModule, SnapshotModule],
+      imports: [PrismaModule, EventSourcingModule],
     }).compile();
 
     service = module.get<BookProjectorService>(BookProjectorService);

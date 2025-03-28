@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { BookCommandService } from './book-command.service';
 import { BookCommandController } from './book-command.controller';
-import { EventStoreModule } from '../../event-store/event-store.module';
-import { SnapshotModule } from '../../snapshot/snapshot.module';
+import { EventSourcingModule } from '../../event-sourcing/event-sourcing.module';
 
 @Module({
-  imports: [EventStoreModule, SnapshotModule],
+  imports: [EventSourcingModule],
   controllers: [BookCommandController],
   providers: [BookCommandService],
 })

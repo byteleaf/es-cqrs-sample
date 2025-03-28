@@ -9,9 +9,9 @@ import { BookEvent } from './events/book.events';
 import { BookAggregate, BookState } from './aggregates/book.aggregate';
 import { Condition } from './enums/condition.enum';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EventStoreService } from '../../event-store/event-store.service';
-import { SnapshotService } from '../../snapshot/snapshot.service';
 import { BookEventTypes } from '../shared/book-event-types.enum';
+import { EventStoreService } from '../../event-sourcing/event-store/event-store.service';
+import { SnapshotService } from '../../event-sourcing/snapshot/snapshot.service';
 
 const SNAPSHOT_THRESHOLD = 3;
 
