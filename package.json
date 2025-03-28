@@ -30,6 +30,8 @@
     "@nestjs/event-emitter": "^3.0.1",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^11.0.7",
+    "@ocoda/event-sourcing": "^2.1.1",
+    "@ocoda/event-sourcing-postgres": "^2.1.1",
     "@prisma/client": "^6.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

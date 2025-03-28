@@ -1,16 +1,43 @@
 import { Module } from '@nestjs/common';
-import { EventStoreModule } from './event-store/event-store.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { SnapshotModule } from './snapshot/snapshot.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BookModule } from './book/book.module';
+import { EventSourcingModule } from '@ocoda/event-sourcing';
+import {
+  PostgresEventStore,
+  PostgresEventStoreConfig,
+  PostgresSnapshotStore,
+  PostgresSnapshotStoreConfig,
+} from '@ocoda/event-sourcing-postgres';
 
 @Module({
   imports: [
-    EventEmitterModule.forRoot({ wildcard: true }),
-    EventStoreModule,
     PrismaModule,
-    SnapshotModule,
+    EventSourcingModule.forRootAsync<
+      PostgresEventStoreConfig,
+      PostgresSnapshotStoreConfig
+    >({
+      useFactory: () => ({
+        events: [],
+        eventStore: {
+          driver: PostgresEventStore,
+          host: '127.0.0.1',
+          port: 5432,
+          user: 'postgres',
+          password: 'postgres',
+          database: 'postgres',
+          useDefaultPool: false,
+        },
+        snapshotStore: {
+          driver: PostgresSnapshotStore,
+          host: '127.0.0.1',
+          port: 5432,
+          user: 'postgres',
+          password: 'postgres',
+          database: 'postgres',
+          useDefaultPool: false,
+        },
+      }),
+    }),
     BookModule,
   ],
 })
