@@ -36,24 +36,24 @@ export class BookAggregate extends AggregateRoot {
     return book;
   }
 
-  public borrowBook(readerId: string) {
-    this.applyEvent(new BookBorrowedEvent(readerId));
+  public borrowBook(bookId: BookId, readerId: string) {
+    this.applyEvent(new BookBorrowedEvent(bookId.value, readerId));
   }
 
-  public returnBook(condition: Condition) {
-    this.applyEvent(new BookReturnedEvent(condition));
+  public returnBook(bookId: BookId, condition: Condition) {
+    this.applyEvent(new BookReturnedEvent(bookId.value, condition));
   }
 
-  public markAsDamaged(comment: string) {
-    this.applyEvent(new BookDamagedEvent(comment));
+  public markAsDamaged(bookId: BookId, comment: string) {
+    this.applyEvent(new BookDamagedEvent(bookId.value, comment));
   }
 
-  public repairBook(comment: string) {
-    this.applyEvent(new BookRepairedEvent(comment));
+  public repairBook(bookId: BookId, comment: string) {
+    this.applyEvent(new BookRepairedEvent(bookId.value, comment));
   }
 
-  public removeBook(reason: string) {
-    this.applyEvent(new BookRemovedEvent(reason));
+  public removeBook(bookId: BookId, reason: string) {
+    this.applyEvent(new BookRemovedEvent(bookId.value, reason));
   }
 
   @EventHandler(BookRegisteredEvent)

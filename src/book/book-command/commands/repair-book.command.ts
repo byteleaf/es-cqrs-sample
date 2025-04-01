@@ -27,7 +27,7 @@ export class RepairBookCommandHandler implements ICommandHandler {
     if (!bookAggregate) {
       throw new NotFoundException('Book not found');
     }
-    bookAggregate.repairBook(command.comment);
+    bookAggregate.repairBook(bookId, command.comment);
 
     await this.bookRepository.save(bookAggregate);
 

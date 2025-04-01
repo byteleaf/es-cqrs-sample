@@ -27,7 +27,7 @@ export class RemoveBookCommandHandler implements ICommandHandler {
     if (!bookAggregate) {
       throw new NotFoundException('Book not found');
     }
-    bookAggregate.removeBook(command.reason);
+    bookAggregate.removeBook(bookId, command.reason);
 
     await this.bookRepository.save(bookAggregate);
 

@@ -1,8 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { BookStatus, Event, Prisma } from '@prisma/client';
-import { OnEvent } from '@nestjs/event-emitter';
-import { BookEventTypes } from './enums/book-event-types.enum';
+import { BookStatus } from '@prisma/client';
+import { EventHandler } from '@ocoda/event-sourcing';
+import { BookRegisteredEvent } from './events/book-registered.event';
+import { BookBorrowedEvent } from './events/book-borrowed.event';
+import { BookReturnedEvent } from './events/book-returned.event';
+import { Condition } from './enums/condition.enum';
+import { BookDamagedEvent } from './events/book-damaged.event';
+import { BookRepairedEvent } from './events/book-repaired.event';
+import { BookRemovedEvent } from './events/book-removed.event';
 
 @Injectable()
 export class BookProjectorService {
@@ -10,73 +16,80 @@ export class BookProjectorService {
 
   constructor(private prismaService: PrismaService) {}
 
-  @OnEvent('book.*')
-  async handleOrderCreatedEvent(event: Event | Prisma.EventCreateInput) {
-    this.logger.log(`Received event: ${event.type}`);
-    await this.applyEvent(event);
+  @EventHandler(BookRegisteredEvent)
+  async onBookRegisteredEvent(event: BookRegisteredEvent) {
+    this.logger.log(`Received BookRegisteredEvent: ${event.bookId}`);
+
+    await this.prismaService.book.upsert({
+      where: { bookId: event.bookId },
+      create: {
+        bookId: event.bookId,
+        title: event.title,
+        author: event.author,
+        isbn: event.isbn,
+        status: BookStatus.AVAILABLE,
+      },
+      update: {
+        title: event.title,
+        author: event.author,
+        isbn: event.isbn,
+        status: BookStatus.AVAILABLE,
+      },
+    });
   }
 
-  async applyEvent(event: Event | Prisma.EventCreateInput) {
-    const { type, aggregateId: bookId, data } = event;
+  @EventHandler(BookBorrowedEvent)
+  async onBookBorrowedEvent(event: BookBorrowedEvent) {
+    this.logger.log(`Received BookBorrowedEvent: ${event.bookId}`);
 
-    switch (type) {
-      case BookEventTypes.BookRegistered:
-        const { title, author, isbn } = data as {
-          title: string;
-          author: string;
-          isbn: string;
-        }; // TODO: fix type
-        await this.prismaService.book.upsert({
-          where: { bookId: bookId },
-          create: {
-            bookId,
-            title,
-            author,
-            isbn,
-            status: BookStatus.AVAILABLE,
-          },
-          update: {
-            title,
-            author,
-            isbn,
-            status: BookStatus.AVAILABLE,
-          },
-        });
-        break;
-      case BookEventTypes.BookBorrowed:
-        await this.prismaService.book.update({
-          where: { bookId },
-          data: { status: BookStatus.BORROWED },
-        });
-        break;
-      case BookEventTypes.BookReturned:
-        const { condition } = data as Prisma.JsonObject;
-        await this.prismaService.book.update({
-          where: { bookId },
-          data: {
-            status:
-              condition === 'good' ? BookStatus.AVAILABLE : BookStatus.DAMAGED,
-          },
-        });
-        break;
-      case BookEventTypes.BookDamaged:
-        await this.prismaService.book.update({
-          where: { bookId },
-          data: { status: BookStatus.DAMAGED },
-        });
-        break;
-      case BookEventTypes.BookRepaired:
-        await this.prismaService.book.update({
-          where: { bookId },
-          data: { status: BookStatus.AVAILABLE },
-        });
-        break;
-      case BookEventTypes.BookRemoved:
-        await this.prismaService.book.update({
-          where: { bookId },
-          data: { status: BookStatus.REMOVED },
-        });
-        break;
-    }
+    await this.prismaService.book.update({
+      where: { bookId: event.bookId },
+      data: { status: BookStatus.BORROWED },
+    });
+  }
+
+  @EventHandler(BookReturnedEvent)
+  async onBookReturnedEvent(event: BookReturnedEvent) {
+    this.logger.log(`Received BookReturnedEvent: ${event.bookId}`);
+
+    await this.prismaService.book.update({
+      where: { bookId: event.bookId },
+      data: {
+        status:
+          event.condition === Condition.Good
+            ? BookStatus.AVAILABLE
+            : BookStatus.DAMAGED,
+      },
+    });
+  }
+
+  @EventHandler(BookDamagedEvent)
+  async onBookDamagedEvent(event: BookDamagedEvent) {
+    this.logger.log(`Received BookDamagedEvent: ${event.bookId}`);
+
+    await this.prismaService.book.update({
+      where: { bookId: event.bookId },
+      data: { status: BookStatus.DAMAGED },
+    });
+  }
+
+  @EventHandler(BookRepairedEvent)
+  async onBookRepairedEvent(event: BookRepairedEvent) {
+    this.logger.log(`Received BookRepairedEvent: ${event.bookId}`);
+
+    await this.prismaService.book.update({
+      where: { bookId: event.bookId },
+      data: { status: BookStatus.AVAILABLE },
+    });
+  }
+
+  @EventHandler(BookRemovedEvent)
+  async onBookRemovedEvent(event: BookRemovedEvent) {
+    this.logger.log(`Received BookRemovedEvent: ${event.bookId}`);
+
+    await this.prismaService.book.update({
+      where: { bookId: event.bookId },
+      data: { status: BookStatus.REMOVED },
+    });
   }
 }

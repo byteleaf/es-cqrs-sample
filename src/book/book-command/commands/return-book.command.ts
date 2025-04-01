@@ -28,7 +28,7 @@ export class ReturnBookCommandHandler implements ICommandHandler {
     if (!bookAggregate) {
       throw new NotFoundException('Book not found');
     }
-    bookAggregate.returnBook(command.condition);
+    bookAggregate.returnBook(bookId, command.condition);
 
     await this.bookRepository.save(bookAggregate);
 

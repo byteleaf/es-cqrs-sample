@@ -27,7 +27,7 @@ export class BorrowBookCommandHandler implements ICommandHandler {
     if (!bookAggregate) {
       throw new NotFoundException('Book not found');
     }
-    bookAggregate.borrowBook(command.readerId);
+    bookAggregate.borrowBook(bookId, command.readerId);
 
     await this.bookRepository.save(bookAggregate);
 
