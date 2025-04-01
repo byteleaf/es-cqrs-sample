@@ -5,8 +5,8 @@ import {
   ICommandHandler,
 } from '@ocoda/event-sourcing';
 import { NotFoundException } from '@nestjs/common';
-import { BookRepository } from '../../book-repository/book.repository';
-import { BookId } from '../../aggregates/book.aggregate';
+import { BookRepository } from '../book.repository';
+import { BookId } from '../aggregates/book.aggregate';
 
 export class RepairBookCommand implements ICommand {
   @IsUUID()

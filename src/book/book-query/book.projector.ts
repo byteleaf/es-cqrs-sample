@@ -1,19 +1,19 @@
 import { Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { BookStatus } from '@prisma/client';
 import {
   EventEnvelope,
   EventSubscriber,
   IEventSubscriber,
 } from '@ocoda/event-sourcing';
-import { BookRegisteredEvent } from './events/book-registered.event';
-import { BookBorrowedEvent } from './events/book-borrowed.event';
-import { BookDamagedEvent } from './events/book-damaged.event';
-import { BookReturnedEvent } from './events/book-returned.event';
-import { BookRepairedEvent } from './events/book-repaired.event';
-import { BookRemovedEvent } from './events/book-removed.event';
-import { Condition } from './enums/condition.enum';
-import { BookEventTypes } from './enums/book-event-types.enum';
+import { BookRegisteredEvent } from '../events/book-registered.event';
+import { BookBorrowedEvent } from '../events/book-borrowed.event';
+import { BookDamagedEvent } from '../events/book-damaged.event';
+import { BookReturnedEvent } from '../events/book-returned.event';
+import { BookRepairedEvent } from '../events/book-repaired.event';
+import { BookRemovedEvent } from '../events/book-removed.event';
+import { Condition } from '../enums/condition.enum';
+import { BookEventTypes } from '../enums/book-event-types.enum';
 
 @EventSubscriber(
   BookRegisteredEvent,
@@ -23,8 +23,8 @@ import { BookEventTypes } from './enums/book-event-types.enum';
   BookRepairedEvent,
   BookRemovedEvent,
 )
-export class BookProjectorService implements IEventSubscriber {
-  private readonly logger = new Logger(BookProjectorService.name);
+export class BookProjector implements IEventSubscriber {
+  private readonly logger = new Logger(BookProjector.name);
 
   constructor(private prismaService: PrismaService) {}
 

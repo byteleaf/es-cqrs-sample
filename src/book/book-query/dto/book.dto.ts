@@ -1,4 +1,4 @@
-import { BookAggregate } from '../../aggregates/book.aggregate';
+import { Book as PrismaBook } from '@prisma/client';
 
 export class Book {
   bookId: string;
@@ -6,18 +6,14 @@ export class Book {
   author: string;
   isbn: string;
   status: string;
-  readerId: string | null;
-  revision: number;
 
-  static from(bookAggregate: BookAggregate): Book {
+  static from(book: PrismaBook): Book {
     return {
-      bookId: bookAggregate.id.value,
-      title: bookAggregate.title,
-      author: bookAggregate.author,
-      isbn: bookAggregate.isbn,
-      status: bookAggregate.status,
-      readerId: bookAggregate.readerId,
-      revision: bookAggregate.revision,
+      bookId: book.bookId,
+      title: book.title,
+      author: book.author,
+      isbn: book.isbn,
+      status: book.status,
     };
   }
 }

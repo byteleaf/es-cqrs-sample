@@ -3,7 +3,7 @@ import {
   Snapshot,
   SnapshotRepository,
 } from '@ocoda/event-sourcing';
-import { BookAggregate, BookId } from '../aggregates/book.aggregate';
+import { BookAggregate, BookId } from './aggregates/book.aggregate';
 
 @Snapshot(BookAggregate, { name: 'book', interval: 3 })
 export class BookSnapshotRepository extends SnapshotRepository<BookAggregate> {

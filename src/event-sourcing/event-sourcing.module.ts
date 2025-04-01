@@ -19,7 +19,7 @@ import { BookEvents } from '../book/events';
         events: [...BookEvents],
         eventStore: {
           driver: PostgresEventStore,
-          host: '127.0.0.1',
+          host: 'localhost',
           port: 5435,
           user: 'admin',
           password: 'password',
@@ -28,7 +28,7 @@ import { BookEvents } from '../book/events';
         },
         snapshotStore: {
           driver: PostgresSnapshotStore,
-          host: '127.0.0.1',
+          host: 'localhost',
           port: 5435,
           user: 'admin',
           password: 'password',

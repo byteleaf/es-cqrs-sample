@@ -4,9 +4,8 @@ import {
   QueryHandler,
 } from '@ocoda/event-sourcing';
 import { NotFoundException } from '@nestjs/common';
-import { BookRepository } from '../../book-repository/book.repository';
-import { BookId } from '../../aggregates/book.aggregate';
 import { Book } from '../dto/book.dto';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 export class GetBookByIdQuery implements IQuery {
   constructor(public readonly bookId: string) {}
@@ -16,16 +15,16 @@ export class GetBookByIdQuery implements IQuery {
 export class GetBookByIdQueryHandler
   implements IQueryHandler<GetBookByIdQuery, Book>
 {
-  constructor(private readonly bookRepository: BookRepository) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   public async execute(query: GetBookByIdQuery): Promise<Book> {
-    const accountId = BookId.from(query.bookId);
-    const bookAggregate = await this.bookRepository.getById(accountId);
+    const book = await this.prismaService.book.findUnique({
+      where: { bookId: query.bookId },
+    });
 
-    if (!bookAggregate) {
+    if (!book) {
       throw new NotFoundException('Book not found');
     }
-
-    return Book.from(bookAggregate);
+    return Book.from(book);
   }
 }

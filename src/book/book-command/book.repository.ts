@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventStore, EventStream, Id } from '@ocoda/event-sourcing';
-import { BookAggregate } from '../aggregates/book.aggregate';
+import { BookAggregate } from './aggregates/book.aggregate';
 import { BookSnapshotRepository } from './book-snapshot.repository';
 
 @Injectable()
