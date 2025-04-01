@@ -16,6 +16,7 @@ import {
 } from '@ocoda/event-sourcing-postgres';
 import { Events } from './events';
 import { GetBookByIdQueryHandler } from './queries/get-book.query';
+import { BookSnapshotRepository } from './repository/book-snapshot.repository';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { GetBookByIdQueryHandler } from './queries/get-book.query';
     ReturnBookCommandHandler,
     GetBookByIdQueryHandler,
     BookRepository,
+    BookSnapshotRepository,
   ],
   controllers: [BookCommandController, BookQueryController],
 })
