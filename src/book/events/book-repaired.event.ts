@@ -1,6 +1,7 @@
 import { Event, type IEvent } from '@ocoda/event-sourcing';
+import { BookEventTypes } from '../enums/book-event-types.enum';
 
-@Event('book-repaired')
+@Event(BookEventTypes.BookRepaired)
 export class BookRepairedEvent implements IEvent {
   constructor(
     public readonly bookId: string,
