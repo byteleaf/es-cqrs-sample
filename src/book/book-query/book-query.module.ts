@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BookQueryService } from './book-query.service';
 import { BookQueryController } from './book-query.controller';
+import { GetBookByIdQueryHandler } from './queries/get-book.query';
 
 @Module({
-  providers: [BookQueryService],
+  providers: [GetBookByIdQueryHandler],
   controllers: [BookQueryController],
 })
 export class BookQueryModule {}

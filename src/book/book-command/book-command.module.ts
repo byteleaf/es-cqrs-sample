@@ -1,12 +1,19 @@
 import { Module } from '@nestjs/common';
-import { BookCommandService } from './book-command.service';
 import { BookCommandController } from './book-command.controller';
-import { EventStoreModule } from '../../event-store/event-store.module';
-import { SnapshotModule } from '../../snapshot/snapshot.module';
+import { BorrowBookCommandHandler } from './commands/borrow-book.command';
+import { RegisterBookCommandHandler } from './commands/register-book.command';
+import { RemoveBookCommandHandler } from './commands/remove-book.command';
+import { RepairBookCommandHandler } from './commands/repair-book.command';
+import { ReturnBookCommandHandler } from './commands/return-book.command';
 
 @Module({
-  imports: [EventStoreModule, SnapshotModule],
   controllers: [BookCommandController],
-  providers: [BookCommandService],
+  providers: [
+    RegisterBookCommandHandler,
+    BorrowBookCommandHandler,
+    ReturnBookCommandHandler,
+    RepairBookCommandHandler,
+    RemoveBookCommandHandler,
+  ],
 })
 export class BookCommandModule {}

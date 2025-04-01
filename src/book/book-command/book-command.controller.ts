@@ -1,62 +1,57 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
-import { BookCommandService } from './book-command.service';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { RegisterBookCommand } from './commands/register-book.command';
 import { BorrowBookCommand } from './commands/borrow-book.command';
 import { ReturnBookCommand } from './commands/return-book.command';
 import { RepairBookCommand } from './commands/repair-book.command';
 import { RemoveBookCommand } from './commands/remove-book.command';
+import { CommandBus } from '@ocoda/event-sourcing';
 
 @Controller('v1/books/commands')
 export class BookCommandController {
-  constructor(private readonly bookCommandService: BookCommandService) {}
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Post('register')
-  registerBook(@Body() registerBookCommand: RegisterBookCommand) {
-    return this.bookCommandService.registerBook(registerBookCommand);
+  async registerBook(@Body() registerBookCommand: RegisterBookCommand) {
+    const bookId =
+      await this.commandBus.execute<RegisterBookCommand>(registerBookCommand);
+
+    return bookId.value;
   }
 
   @ApiOperation({ summary: 'Borrow a book' })
   @Post('borrow')
   @HttpCode(204)
-  borrowBook(@Body() borrowBookCommand: BorrowBookCommand) {
-    return this.bookCommandService.borrowBook(borrowBookCommand);
+  async borrowBook(@Body() borrowBookCommand: BorrowBookCommand) {
+    await this.commandBus.execute<BorrowBookCommand>(borrowBookCommand);
   }
 
   @Post('return')
   @HttpCode(204)
-  returnBook(@Body() returnBookCommand: ReturnBookCommand) {
-    return this.bookCommandService.returnBook(returnBookCommand);
+  async returnBook(@Body() returnBookCommand: ReturnBookCommand) {
+    await this.commandBus.execute<ReturnBookCommand>(returnBookCommand);
   }
 
   @Post('repair')
   @HttpCode(204)
-  repairBook(@Body() repairBookCommand: RepairBookCommand) {
-    return this.bookCommandService.repairBook(repairBookCommand);
+  async repairBook(@Body() repairBookCommand: RepairBookCommand) {
+    await this.commandBus.execute<RepairBookCommand>(repairBookCommand);
   }
 
   @Post('remove')
   @HttpCode(204)
-  removeBook(@Body() removeBookCommand: RemoveBookCommand) {
-    return this.bookCommandService.removeBook(removeBookCommand);
+  async removeBook(@Body() removeBookCommand: RemoveBookCommand) {
+    await this.commandBus.execute<RemoveBookCommand>(removeBookCommand);
   }
-
-  @Get('state/:id')
-  getBookState(@Param('id') id: string, @Query('revision') revision?: number) {
-    return this.bookCommandService.getBookState(id, revision);
-  }
-
-  @Post('replay/:id')
-  @HttpCode(204)
-  replayEvents(@Param('id') id: string, @Query('revision') revision?: number) {
-    return this.bookCommandService.replayEvents(id, revision);
-  }
+  //
+  // @Get('state/:id')
+  // getBookState(@Param('id') id: string, @Query('revision') revision?: number) {
+  //   return this.bookCommandService.getBookState(id, revision);
+  // }
+  //
+  // @Post('replay/:id')
+  // @HttpCode(204)
+  // replayEvents(@Param('id') id: string, @Query('revision') revision?: number) {
+  //   return this.bookCommandService.replayEvents(id, revision);
+  // }
 }

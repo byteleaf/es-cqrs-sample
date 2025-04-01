@@ -8,6 +8,7 @@ import {
   PostgresSnapshotStore,
   PostgresSnapshotStoreConfig,
 } from '@ocoda/event-sourcing-postgres';
+import { Events } from './book/book-command/events/';
 
 @Module({
   imports: [
@@ -17,13 +18,13 @@ import {
       PostgresSnapshotStoreConfig
     >({
       useFactory: () => ({
-        events: [],
+        events: Events,
         eventStore: {
           driver: PostgresEventStore,
           host: '127.0.0.1',
           port: 5432,
-          user: 'postgres',
-          password: 'postgres',
+          user: 'admin',
+          password: 'password',
           database: 'postgres',
           useDefaultPool: false,
         },
@@ -31,8 +32,8 @@ import {
           driver: PostgresSnapshotStore,
           host: '127.0.0.1',
           port: 5432,
-          user: 'postgres',
-          password: 'postgres',
+          user: 'admin',
+          password: 'password',
           database: 'postgres',
           useDefaultPool: false,
         },
