@@ -26,6 +26,7 @@ export class BookSnapshotRepository extends SnapshotRepository<BookAggregate> {
       revision: revision,
     };
   }
+
   deserialize({
     id,
     title,

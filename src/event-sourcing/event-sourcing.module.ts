@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import {
   PostgresEventStore,
   PostgresEventStoreConfig,
@@ -6,8 +6,9 @@ import {
   PostgresSnapshotStoreConfig,
 } from '@ocoda/event-sourcing-postgres';
 import { EventSourcingModule as OcodaEventSourcingModule } from '@ocoda/event-sourcing';
-import { Events } from '../events';
+import { BookEvents } from '../book/events';
 
+@Global()
 @Module({
   imports: [
     OcodaEventSourcingModule.forRootAsync<
@@ -15,7 +16,7 @@ import { Events } from '../events';
       PostgresSnapshotStoreConfig
     >({
       useFactory: () => ({
-        events: Events,
+        events: [...BookEvents],
         eventStore: {
           driver: PostgresEventStore,
           host: '127.0.0.1',

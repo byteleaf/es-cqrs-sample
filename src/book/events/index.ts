@@ -5,7 +5,7 @@ import { BookReturnedEvent } from './book-returned.event';
 import { BookDamagedEvent } from './book-damaged.event';
 import { BookRepairedEvent } from './book-repaired.event';
 
-export const Events = [
+export const BookEvents = [
   BookRegisteredEvent,
   BookBorrowedEvent,
   BookReturnedEvent,

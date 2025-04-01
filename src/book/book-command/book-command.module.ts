@@ -6,18 +6,15 @@ import { BorrowBookCommandHandler } from './commands/borrow-book.command';
 import { RemoveBookCommandHandler } from './commands/remove-book.command';
 import { RepairBookCommandHandler } from './commands/repair-book.command';
 import { ReturnBookCommandHandler } from './commands/return-book.command';
-import { GetBookByIdQueryHandler } from '../book-query/queries/get-book.query';
-import { EventSourcingModule } from '../event-sourcing/event-sourcing.module';
 
 @Module({
-  imports: [BookRepositoryModule, EventSourcingModule],
+  imports: [BookRepositoryModule],
   providers: [
     RegisterBookCommandHandler,
     BorrowBookCommandHandler,
     RemoveBookCommandHandler,
     RepairBookCommandHandler,
     ReturnBookCommandHandler,
-    GetBookByIdQueryHandler,
   ],
   controllers: [BookCommandController],
 })
