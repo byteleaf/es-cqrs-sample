@@ -23,7 +23,10 @@ export class RegisterBookCommandHandler implements ICommandHandler {
   constructor(private readonly bookRepository: BookRepository) {}
 
   async execute(command: RegisterBookCommand): Promise<BookId> {
+    const bookId = BookId.generate();
+
     const bookAggregate = BookAggregate.registerBook(
+      bookId,
       command.title,
       command.author,
       command.isbn,
@@ -31,6 +34,6 @@ export class RegisterBookCommandHandler implements ICommandHandler {
 
     await this.bookRepository.save(bookAggregate);
 
-    return bookAggregate.id;
+    return bookId;
   }
 }

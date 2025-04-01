@@ -16,7 +16,7 @@ export class BookCommandController {
     const bookId =
       await this.commandBus.execute<RegisterBookCommand>(registerBookCommand);
 
-    return bookId.value;
+    return { bookId: bookId.value };
   }
 
   @ApiOperation({ summary: 'Borrow a book' })

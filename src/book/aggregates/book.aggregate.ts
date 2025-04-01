@@ -25,10 +25,14 @@ export class BookAggregate extends AggregateRoot {
   readerId: string | null;
   revision: number;
 
-  public static registerBook(title: string, author: string, isbn: string) {
+  public static registerBook(
+    bookId: BookId,
+    title: string,
+    author: string,
+    isbn: string,
+  ) {
     const book = new BookAggregate();
-    book.id = BookId.generate();
-    book.applyEvent(new BookRegisteredEvent(title, author, isbn));
+    book.applyEvent(new BookRegisteredEvent(bookId.value, title, author, isbn));
     return book;
   }
 
@@ -54,11 +58,12 @@ export class BookAggregate extends AggregateRoot {
 
   @EventHandler(BookRegisteredEvent)
   onBookRegisteredEvent(event: BookRegisteredEvent) {
+    this.id = BookId.from(event.bookId);
     this.title = event.title;
     this.author = event.author;
     this.isbn = event.isbn;
     this.status = BookStatus.AVAILABLE;
-    this.revision = 0;
+    this.revision = 1;
   }
 
   @EventHandler(BookBorrowedEvent)
