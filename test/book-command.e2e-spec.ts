@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { Condition } from '../src/book/book-command/enums/condition.enum';
+import { Condition } from '../src/book/enums/condition.enum';
 
 describe('BookCommandController (e2e)', () => {
   let app: INestApplication;

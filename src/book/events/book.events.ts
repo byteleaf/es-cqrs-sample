@@ -1,5 +1,5 @@
 import { Condition } from '../enums/condition.enum';
-import { BookEventTypes } from '../../shared/book-event-types.enum';
+import { BookEventTypes } from '../enums/book-event-types.enum';
 
 type BaseBookEvent = {
   bookId: string;

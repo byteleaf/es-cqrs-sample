@@ -5,11 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BookStatus, Event } from '@prisma/client';
-import { BookEvent } from './events/book.events';
+import { BookEvent } from '../events/book.events';
 import { BookAggregate, BookState } from './aggregates/book.aggregate';
-import { Condition } from './enums/condition.enum';
+import { Condition } from '../enums/condition.enum';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { BookEventTypes } from '../shared/book-event-types.enum';
+import { BookEventTypes } from '../enums/book-event-types.enum';
 import { EventStoreService } from '../../event-sourcing/event-store/event-store.service';
 import { SnapshotService } from '../../event-sourcing/snapshot/snapshot.service';
 

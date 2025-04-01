@@ -1,5 +1,5 @@
 import { BookStatus, Event, Prisma } from '@prisma/client';
-import { BookEventTypes } from '../../shared/book-event-types.enum';
+import { BookEventTypes } from '../../enums/book-event-types.enum';
 
 export type BookState = {
   id: string;

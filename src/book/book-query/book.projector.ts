@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { BookStatus, Event, Prisma } from '@prisma/client';
 import { OnEvent } from '@nestjs/event-emitter';
-import { BookEventTypes } from './shared/book-event-types.enum';
+import { BookEventTypes } from '../enums/book-event-types.enum';
 
 @Injectable()
-export class BookProjectorService {
-  private readonly logger = new Logger(BookProjectorService.name);
+export class BookProjector {
+  private readonly logger = new Logger(BookProjector.name);
 
   constructor(private prismaService: PrismaService) {}
 
