@@ -1,13 +1,13 @@
 import { IsEnum, IsUUID } from 'class-validator';
-import { Condition } from '../enums/condition.enum';
 import {
   CommandHandler,
   ICommand,
   ICommandHandler,
 } from '@ocoda/event-sourcing';
-import { BookId } from '../aggregates/book.aggregate';
 import { NotFoundException } from '@nestjs/common';
-import { BookRepository } from '../repository/book.repository';
+import { BookId } from '../../aggregates/book.aggregate';
+import { BookRepository } from '../../book-repository/book.repository';
+import { Condition } from '../../enums/condition.enum';
 
 export class ReturnBookCommand implements ICommand {
   @IsUUID()

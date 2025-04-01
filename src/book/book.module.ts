@@ -1,62 +1,8 @@
 import { Module } from '@nestjs/common';
-import { BookCommandController } from './book-command.controller';
-import { BookQueryController } from './book-query.controller';
-import { BorrowBookCommandHandler } from './commands/borrow-book.command';
-import { RegisterBookCommandHandler } from './commands/register-book.command';
-import { BookRepository } from './repository/book.repository';
-import { RemoveBookCommandHandler } from './commands/remove-book.command';
-import { RepairBookCommandHandler } from './commands/repair-book.command';
-import { ReturnBookCommandHandler } from './commands/return-book.command';
-import { EventSourcingModule } from '@ocoda/event-sourcing';
-import {
-  PostgresEventStore,
-  type PostgresEventStoreConfig,
-  PostgresSnapshotStore,
-  type PostgresSnapshotStoreConfig,
-} from '@ocoda/event-sourcing-postgres';
-import { Events } from './events';
-import { GetBookByIdQueryHandler } from './queries/get-book.query';
-import { BookSnapshotRepository } from './repository/book-snapshot.repository';
+import { BookCommandModule } from './book-command/book-command.module';
+import { BookQueryModule } from './book-query/book-query.module';
 
 @Module({
-  imports: [
-    EventSourcingModule.forRootAsync<
-      PostgresEventStoreConfig,
-      PostgresSnapshotStoreConfig
-    >({
-      useFactory: () => ({
-        events: Events,
-        eventStore: {
-          driver: PostgresEventStore,
-          host: '127.0.0.1',
-          port: 5435,
-          user: 'admin',
-          password: 'password',
-          database: 'ocoda',
-          useDefaultPool: true,
-        },
-        snapshotStore: {
-          driver: PostgresSnapshotStore,
-          host: '127.0.0.1',
-          port: 5435,
-          user: 'admin',
-          password: 'password',
-          database: 'ocoda',
-          useDefaultPool: true,
-        },
-      }),
-    }),
-  ],
-  providers: [
-    RegisterBookCommandHandler,
-    BorrowBookCommandHandler,
-    RemoveBookCommandHandler,
-    RepairBookCommandHandler,
-    ReturnBookCommandHandler,
-    GetBookByIdQueryHandler,
-    BookRepository,
-    BookSnapshotRepository,
-  ],
-  controllers: [BookCommandController, BookQueryController],
+  imports: [BookCommandModule, BookQueryModule],
 })
 export class BookModule {}
