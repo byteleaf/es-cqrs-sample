@@ -1,7 +1,7 @@
 import { BookAggregate } from '../aggregates/book.aggregate';
 
 export class Book {
-  id: string;
+  bookId: string;
   title: string;
   author: string;
   isbn: string;
@@ -11,7 +11,7 @@ export class Book {
 
   static from(bookAggregate: BookAggregate): Book {
     return {
-      id: bookAggregate.id.value,
+      bookId: bookAggregate.id.value,
       title: bookAggregate.title,
       author: bookAggregate.author,
       isbn: bookAggregate.isbn,

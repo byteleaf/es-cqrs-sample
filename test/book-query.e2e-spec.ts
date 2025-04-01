@@ -44,7 +44,7 @@ describe('BookQueryController (e2e)', () => {
 
   it('should return 404 for non-existing book', () => {
     return request(app.getHttpServer())
-      .get('/api/v1/books/queries/non-existing-id')
+      .get('/api/v1/books/queries/c60a8280-812b-460b-97fe-dbb7f6101deb')
       .expect(404);
   });
 });
