@@ -1,4 +1,4 @@
-import { BookAggregate } from '../../book-command/aggregates/book.aggregate';
+import { BookAggregate } from '../aggregates/book.aggregate';
 
 export class Book {
   id: string;

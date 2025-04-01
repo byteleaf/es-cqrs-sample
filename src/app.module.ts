@@ -8,7 +8,7 @@ import {
   PostgresSnapshotStore,
   PostgresSnapshotStoreConfig,
 } from '@ocoda/event-sourcing-postgres';
-import { Events } from './book/book-command/events/';
+import { Events } from './book/events';
 
 @Module({
   imports: [

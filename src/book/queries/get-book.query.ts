@@ -3,10 +3,10 @@ import {
   type IQueryHandler,
   QueryHandler,
 } from '@ocoda/event-sourcing';
-import { BookRepository } from '../../shared/book.repository';
-import { BookId } from '../../book-command/aggregates/book.aggregate';
 import { NotFoundException } from '@nestjs/common';
 import { Book } from '../dto/book.dto';
+import { BookRepository } from '../repository/book.repository';
+import { BookId } from '../aggregates/book.aggregate';
 
 export class GetBookByIdQuery implements IQuery {
   constructor(public readonly bookId: string) {}
