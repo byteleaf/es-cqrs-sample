@@ -20,7 +20,7 @@ import { BookEvents } from '../book/events';
         eventStore: {
           driver: PostgresEventStore,
           host: 'localhost',
-          port: 5435,
+          port: 5436,
           user: 'admin',
           password: 'password',
           database: 'ocoda',
@@ -29,7 +29,7 @@ import { BookEvents } from '../book/events';
         snapshotStore: {
           driver: PostgresSnapshotStore,
           host: 'localhost',
-          port: 5435,
+          port: 5436,
           user: 'admin',
           password: 'password',
           database: 'ocoda',
