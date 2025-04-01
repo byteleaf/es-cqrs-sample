@@ -17,6 +17,10 @@ export class BookRepository {
 
     await bookAggregate.loadFromHistory(eventCursor);
 
+    if (bookAggregate.version < 1) {
+      return;
+    }
+
     return bookAggregate;
   }
 
