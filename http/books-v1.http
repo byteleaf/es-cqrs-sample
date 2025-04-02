@@ -7,7 +7,7 @@ Content-Type: application/json
 {
   "title": "The Lord of the Rings",
   "author": "J.R.R. Tolkien",
-  "isbn": "978-3-16-148410-0"
+  "isbn": "978-0-395-19395-2"
 }
 
 > {%

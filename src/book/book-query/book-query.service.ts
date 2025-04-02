@@ -19,15 +19,12 @@ export class BookQueryService {
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-    return Book.from(book);
+    return Book.fromEntity(book);
   }
 
   async queryBookState(id: string, revision: number): Promise<BookState> {
-    const bookAggregate = await this.bookEventRehydrationService.rehydrate(
-      id,
-      revision,
-    );
+    const book = await this.bookEventRehydrationService.rehydrate(id, revision);
 
-    return BookState.from(bookAggregate);
+    return BookState.fromAggregate(book);
   }
 }
