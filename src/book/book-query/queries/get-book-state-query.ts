@@ -9,7 +9,10 @@ import { BookId } from '../../book-command/aggregates/book.aggregate';
 import { BookState } from '../dto/book-state.dto';
 
 export class GetBookStateByIdQuery implements IQuery {
-  constructor(public readonly bookId: string) {}
+  constructor(
+    public readonly bookId: string,
+    public readonly revision?: number,
+  ) {}
 }
 
 @QueryHandler(GetBookStateByIdQuery)
@@ -20,7 +23,7 @@ export class GetBookStateByIdQueryHandler
 
   public async execute(query: GetBookStateByIdQuery): Promise<BookState> {
     const bookId = BookId.from(query.bookId);
-    const book = await this.bookRepository.getById(bookId);
+    const book = await this.bookRepository.getById(bookId, query.revision);
 
     if (!book) {
       throw new NotFoundException('Book not found');

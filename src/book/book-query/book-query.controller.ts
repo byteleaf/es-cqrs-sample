@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { QueryBus } from '@ocoda/event-sourcing';
 import { GetBookByIdQuery } from './queries/get-book.query';
 import { GetBookStateByIdQuery } from './queries/get-book-state-query';
@@ -22,8 +22,11 @@ export class BookQueryController {
   @ApiOperation({ summary: 'Get book state' })
   @ApiResponse({ status: 200, description: 'Book state', type: BookState })
   @Get('state/:id')
-  queryBookState(@Param('id') id: string): Promise<BookState> {
-    const query = new GetBookStateByIdQuery(id);
+  queryBookState(
+    @Param('id') id: string,
+    @Query('revision') revision?: number,
+  ): Promise<BookState> {
+    const query = new GetBookStateByIdQuery(id, revision);
     return this.queryBus.execute(query);
   }
 }

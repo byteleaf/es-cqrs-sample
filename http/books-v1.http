@@ -50,6 +50,10 @@ Content-Type: application/json
   "reason": "Book is unrepairable"
 }
 
+### Replay the last event
+POST http://localhost:3000/api/v1/books/commands/replay/{{bookId}}
+
+
 ### Query a book
 GET http://localhost:3000/api/v1/books/queries/{{bookId}}
 

@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { EventStore, EventStream, Id } from '@ocoda/event-sourcing';
+import {
+  EventStore,
+  EventStream,
+  Id,
+  type ISnapshot,
+} from '@ocoda/event-sourcing';
 import { BookAggregate } from '../book-command/aggregates/book.aggregate';
 import { BookSnapshotRepository } from './book-snapshot.repository';
 
@@ -10,13 +15,28 @@ export class BookRepository {
     private readonly bookSnapshotRepository: BookSnapshotRepository,
   ) {}
 
-  async getById(bookId: Id): Promise<BookAggregate> {
+  async getById(
+    bookId: Id,
+    revision: number = Number.MAX_SAFE_INTEGER,
+  ): Promise<BookAggregate> {
     const eventStream = EventStream.for<BookAggregate>(BookAggregate, bookId);
 
-    const bookAggregate = await this.bookSnapshotRepository.load(bookId);
+    const snapshots = this.bookSnapshotRepository.loadAll({
+      aggregateId: bookId,
+      limit: revision,
+    });
+
+    const result = await snapshots.next();
+    if (result.done || !result.value?.length) {
+      return;
+    }
+
+    const payload = result.value[0].payload as ISnapshot<BookAggregate>;
+    const bookAggregate = this.bookSnapshotRepository.deserialize(payload);
 
     const eventCursor = this.eventStore.getEvents(eventStream, {
       fromVersion: bookAggregate.version + 1,
+      limit: revision,
     });
 
     await bookAggregate.loadFromHistory(eventCursor);
