@@ -53,4 +53,10 @@ Content-Type: application/json
 ### Query a book
 GET http://localhost:3000/api/v1/books/queries/{{bookId}}
 
+### Get a book state
+GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}
+
+### Get a book state on Revision 2
+GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}?revision=1
+
 

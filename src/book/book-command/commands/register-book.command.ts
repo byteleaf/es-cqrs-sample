@@ -5,7 +5,7 @@ import {
   ICommandHandler,
 } from '@ocoda/event-sourcing';
 import { BookAggregate, BookId } from '../aggregates/book.aggregate';
-import { BookRepository } from '../book.repository';
+import { BookRepository } from '../../book-domain/book.repository';
 
 export class RegisterBookCommand implements ICommand {
   @IsString()

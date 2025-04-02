@@ -5,19 +5,16 @@ import { BorrowBookCommandHandler } from './commands/borrow-book.command';
 import { RemoveBookCommandHandler } from './commands/remove-book.command';
 import { RepairBookCommandHandler } from './commands/repair-book.command';
 import { ReturnBookCommandHandler } from './commands/return-book.command';
-import { BookRepository } from './book.repository';
-import { BookSnapshotRepository } from './book-snapshot.repository';
+import { BookDomainModule } from '../book-domain/book-domain.module';
 
 @Module({
-  imports: [],
+  imports: [BookDomainModule],
   providers: [
     RegisterBookCommandHandler,
     BorrowBookCommandHandler,
     RemoveBookCommandHandler,
     RepairBookCommandHandler,
     ReturnBookCommandHandler,
-    BookRepository,
-    BookSnapshotRepository,
   ],
   controllers: [BookCommandController],
 })

@@ -6,7 +6,7 @@ import {
   PostgresSnapshotStoreConfig,
 } from '@ocoda/event-sourcing-postgres';
 import { EventSourcingModule as OcodaEventSourcingModule } from '@ocoda/event-sourcing';
-import { BookEvents } from '../book/events';
+import { BookEvents } from '../book/book-domain/events';
 
 @Global()
 @Module({

@@ -6,7 +6,7 @@ import {
 } from '@ocoda/event-sourcing';
 import { NotFoundException } from '@nestjs/common';
 import { BookId } from '../aggregates/book.aggregate';
-import { BookRepository } from '../book.repository';
+import { BookRepository } from '../../book-domain/book.repository';
 
 export class RemoveBookCommand implements ICommand {
   @IsUUID()

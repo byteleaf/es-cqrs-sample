@@ -4,13 +4,13 @@ import {
   EventHandler,
   UUID,
 } from '@ocoda/event-sourcing';
-import { BookRegisteredEvent } from '../../events/book-registered.event';
-import { BookBorrowedEvent } from '../../events/book-borrowed.event';
-import { BookReturnedEvent } from '../../events/book-returned.event';
-import { Condition } from '../../enums/condition.enum';
-import { BookDamagedEvent } from '../../events/book-damaged.event';
-import { BookRepairedEvent } from '../../events/book-repaired.event';
-import { BookRemovedEvent } from '../../events/book-removed.event';
+import { BookRegisteredEvent } from '../../book-domain/events/book-registered.event';
+import { BookBorrowedEvent } from '../../book-domain/events/book-borrowed.event';
+import { BookReturnedEvent } from '../../book-domain/events/book-returned.event';
+import { Condition } from '../../book-domain/enums/condition.enum';
+import { BookDamagedEvent } from '../../book-domain/events/book-damaged.event';
+import { BookRepairedEvent } from '../../book-domain/events/book-repaired.event';
+import { BookRemovedEvent } from '../../book-domain/events/book-removed.event';
 import { BookStatus } from '@prisma/client';
 
 export class BookId extends UUID {}
