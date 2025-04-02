@@ -8,11 +8,14 @@ import { NotFoundException } from '@nestjs/common';
 import { BookId } from '../aggregates/book.aggregate';
 import { BookRepository } from '../../book-domain/book.repository';
 import { Condition } from '../../book-domain/enums/condition.enum';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ReturnBookCommand implements ICommand {
+  @ApiProperty({ example: 'b0b4b3b4-4b4b-4b4b-4b4b-4b4b4b4b4b4b' })
   @IsUUID()
   bookId: string;
 
+  @ApiProperty({ example: Condition.Good })
   @IsEnum(Condition)
   condition: Condition;
 }

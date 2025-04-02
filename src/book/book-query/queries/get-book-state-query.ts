@@ -25,6 +25,6 @@ export class GetBookStateByIdQueryHandler
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-    return BookState.from(book);
+    return BookState.fromAggregate(book);
   }
 }

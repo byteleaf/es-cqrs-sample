@@ -1,16 +1,15 @@
-import { BookStatus } from '@prisma/client';
 import { BookAggregate } from '../../book-command/aggregates/book.aggregate';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Book } from './book.dto';
 
-export class BookState {
-  bookId: string;
-  title: string;
-  author: string;
-  isbn: string;
-  status: BookStatus;
+export class BookState extends Book {
+  @ApiPropertyOptional({ example: 'reader-123' })
   readerId: string | null;
+
+  @ApiProperty({ example: 1 })
   revision: number;
 
-  static from(book: BookAggregate): BookState {
+  static fromAggregate(book: BookAggregate): BookState {
     return {
       bookId: book.id.value,
       title: book.title,

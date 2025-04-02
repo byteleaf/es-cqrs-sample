@@ -6,14 +6,18 @@ import {
 } from '@ocoda/event-sourcing';
 import { BookAggregate, BookId } from '../aggregates/book.aggregate';
 import { BookRepository } from '../../book-domain/book.repository';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterBookCommand implements ICommand {
+  @ApiProperty({ example: 'The Lord of the Rings' })
   @IsString()
   title: string;
 
+  @ApiProperty({ example: 'J.R.R. Tolkien' })
   @IsString()
   author: string;
 
+  @ApiProperty({ example: '978-0-395-19395-2' })
   @IsISBN()
   isbn: string;
 }

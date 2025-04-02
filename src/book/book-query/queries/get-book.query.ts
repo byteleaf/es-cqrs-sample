@@ -25,6 +25,6 @@ export class GetBookByIdQueryHandler
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-    return Book.from(book);
+    return Book.fromEntity(book);
   }
 }

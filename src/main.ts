@@ -17,8 +17,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const config = new DocumentBuilder()
-    .setTitle('API Documentation')
-    .setDescription('The API description')
+    .setTitle('CQRS API')
+    .setDescription('CQRS API for Book Management')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
