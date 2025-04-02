@@ -1,4 +1,4 @@
-import { Book as PrismaBook } from '@prisma/client';
+import { Book as BookEntity } from '@prisma/client';
 
 export class Book {
   bookId: string;
@@ -7,7 +7,7 @@ export class Book {
   isbn: string;
   status: string;
 
-  static from(book: PrismaBook): Book {
+  static from(book: BookEntity): Book {
     return {
       bookId: book.bookId,
       title: book.title,
