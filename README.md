@@ -1,7 +1,6 @@
-# Example of Event Sourcing with NestJS
+# Example of Event Sourcing with  NestJS <img src="https://nestjs.com/logo-small-gradient.d792062c.svg" width="50" height="50"> + Oocda <img src="https://ocodacdn.com/image/unsafe/plain/common://ocoda_logo_gradient.svg" width="50" height="50">
 
-## Disclaimer
-For simplicity, this project does not use `@nestjs/cqrs`.
+
 
 ## Introduction
 
@@ -9,7 +8,9 @@ Modern software systems often face the challenge of managing data consistently w
 scalability and traceability. Two architectural patterns that can help with this are event sourcing and CQRS (Command
 Query Responsibility Segregation).
 
-## Event Sourcing (ES)
+In this guide, we'll walk through a practical example of implementing Event Sourcing with CQRS using NestJS and Oocda, demonstrating how these patterns work together to build scalable, maintainable applications.
+
+## What is Event Sourcing (ES)? 
 
 Event sourcing is an architectural principle in which the status of a system is not stored in the form of current data,
 but as a sequence of events. Every change is logged as an immutable event so that the entire history of a system can be
@@ -31,16 +32,8 @@ are applied in the order in which they occur.
 
 ### Events Table (Event Store)
 
-The event store (event table) stores all events in the system. It is the source of truth for the system's history.
+The event store (events table) stores all events in the system. It is the source of truth for the system's history.
 
-| Column             | Description                   |
-|--------------------|-------------------------------|
-| id                 | Unique identifier             |
-| aggregate_id       | ID of the sourced entity      |
-| aggregate_revision | Sequence number of the entity |
-| type               | Type of event                 |
-| createdAt          | Event timestamp               |
-| data               | Event data                    |
 
 ### Advantages:
 
@@ -58,7 +51,7 @@ The event store (event table) stores all events in the system. It is the source 
 - Performance during reconstruction: The current state must be calculated by applying all events, which can be
   inefficient if there are many events. (Projections and Snapshots can help here)
 
-## Command Query Responsibility Segregation (CQRS)
+## What is CQRS (Command Query Responsibility Segregation)? 
 
 Command Query Responsibility Segregation is an architectural pattern in which the processing of commands and queries is
 separated. Commands are change requests that change the state of the system, while queries retrieve information from the
@@ -85,7 +78,21 @@ system without changing the state.
 - The system is more difficult to understand because it is not the classic CRUD standard architecture.
 - Often more data bases are used (e.g Caching or read-optimized databases for the query model).
 
-## Projections
+
+## Core Concepts
+
+### Aggregates
+
+Aggregates are a concept from **Domain-Driven Design (DDD)**, and they play a vital role in both **Event Sourcing** and **CQRS**.
+
+In **Event Sourcing**, aggregates **emit** domain events when state changes occur and **ebuild** their state by **replaying** those events.
+
+In **CQRS**, aggregates are part of the **command side**, responsible for **handling commands**, enforcing business rules, and ensuring consistency within their boundaries.
+
+They act as the central gatekeeper for maintaining the integrity of a domain model.
+
+
+### Projections
 
 A Projection is the read model built from events.
 It represents the current state of something, derived by processing a stream of historical events.
@@ -103,7 +110,7 @@ It represents the current state of something, derived by processing a stream of 
 
 ![Projection Diagram](doc/png/projection.png)
 
-## Snapshots
+### Snapshots
 
 As the number of events increases, replaying all events to reconstruct the current state can become slow.
 To mitigate this, snapshots capture the state of an aggregate at a specific point in time, allowing you to load from
@@ -117,7 +124,7 @@ Several strategies can be used to determine when to create a snapshot:
 
 ![Projection Diagram](doc/png/snapshot.png)
 
-## Projections vs. Snapshots
+### Projections vs. Snapshots
 
 Projections and snapshots are two different concepts:
 
@@ -130,13 +137,16 @@ Projections and snapshots are two different concepts:
 | Content    | Current state of something                                                 | State of an aggregate at a point in time |
 | When Used  | During queries (reads)                                                     | During  command handling (writes)        |
 
-## Installation
+
+## Setting Up the Application
+
+### Installation
 
 ```bash
 $ pnpm install
 ```
 
-## Running the app
+### Running the app
 
 ```bash
 # development
@@ -149,7 +159,7 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
-## Test
+### Test
 
 ```bash
 # unit tests
