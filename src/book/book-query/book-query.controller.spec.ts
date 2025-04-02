@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BookQueryController } from './book-query.controller';
 import { BookQueryService } from './book-query.service';
 import { PrismaModule } from '../../prisma/prisma.module';
+import { BookDomainModule } from '../book-domain/book-domain.module';
 
 describe('BookQueryController', () => {
   let controller: BookQueryController;
@@ -10,7 +11,7 @@ describe('BookQueryController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BookQueryController],
       providers: [BookQueryService],
-      imports: [PrismaModule],
+      imports: [PrismaModule, BookDomainModule],
     }).compile();
 
     controller = module.get<BookQueryController>(BookQueryController);

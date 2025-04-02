@@ -1,5 +1,5 @@
 import { IsEnum, IsUUID } from 'class-validator';
-import { Condition } from '../../enums/condition.enum';
+import { Condition } from '../../book-domain/enums/condition.enum';
 
 export class ReturnBookCommand {
   @IsUUID()

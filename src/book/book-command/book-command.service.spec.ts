@@ -3,6 +3,7 @@ import { BookCommandService } from './book-command.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { EventSourcingModule } from '../../event-sourcing/event-sourcing.module';
+import { BookDomainModule } from '../book-domain/book-domain.module';
 
 describe('BookCommandService', () => {
   let service: BookCommandService;
@@ -12,6 +13,7 @@ describe('BookCommandService', () => {
       providers: [BookCommandService],
       imports: [
         PrismaModule,
+        BookDomainModule,
         EventSourcingModule,
         EventEmitterModule.forRoot(),
       ],

@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { BookCommandService } from './book-command.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { RegisterBookCommand } from './commands/register-book.command';
@@ -47,11 +39,6 @@ export class BookCommandController {
   @HttpCode(204)
   removeBook(@Body() removeBookCommand: RemoveBookCommand) {
     return this.bookCommandService.removeBook(removeBookCommand);
-  }
-
-  @Get('state/:id')
-  getBookState(@Param('id') id: string, @Query('revision') revision?: number) {
-    return this.bookCommandService.getBookState(id, revision);
   }
 
   @Post('replay/:id')
