@@ -13,7 +13,6 @@ import { BookId } from '../aggregates/book.aggregate';
 import { BookRepository } from '../../book-domain/book.repository';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Logger } from '@nestjs/common';
 
 export class ReplayBookCommand implements ICommand {
   @ApiProperty({ example: 'b0b4b3b4-4b4b-4b4b-4b4b-4b4b4b4b4b4b' })
@@ -32,8 +31,6 @@ export class ReplayBookCommand implements ICommand {
 
 @CommandHandler(ReplayBookCommand)
 export class ReplayBookCommandHandler implements ICommandHandler {
-  private readonly logger = new Logger(ReplayBookCommandHandler.name);
-
   constructor(
     private readonly bookRepository: BookRepository,
     private readonly emitter: EventEmitter2,
@@ -58,10 +55,6 @@ export class ReplayBookCommandHandler implements ICommandHandler {
   private async publish(aggregateId: string, event: IEvent) {
     const classRef = event.constructor;
     const eventMetadata = Reflect.getMetadata(EVENT_METADATA, classRef);
-
-    this.logger.log(
-      `ReplayEventPublisher - Publishing event type: ${JSON.stringify(eventMetadata)} - event: ${JSON.stringify(event)};`,
-    );
 
     const eventEnvelope = EventEnvelope.from(
       eventMetadata.name,
