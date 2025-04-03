@@ -48,14 +48,14 @@ export class ReplayBookCommandHandler implements ICommandHandler {
 
     for await (const events of eventStream) {
       for (const event of events) {
-        this.publish(command.bookId, event);
+        await this.publish(command.bookId, event);
       }
     }
 
     return true;
   }
 
-  private publish(aggregateId: string, event: IEvent): void {
+  private async publish(aggregateId: string, event: IEvent) {
     const classRef = event.constructor;
     const eventMetadata = Reflect.getMetadata(EVENT_METADATA, classRef);
 
@@ -69,7 +69,7 @@ export class ReplayBookCommandHandler implements ICommandHandler {
       this.createDummyEventMetadata(aggregateId),
     );
 
-    this.emitter.emit(eventMetadata.name, eventEnvelope);
+    await this.emitter.emitAsync(eventMetadata.name, eventEnvelope);
   }
 
   private createDummyEventMetadata(aggregateId: string): EventEnvelopeMetadata {
