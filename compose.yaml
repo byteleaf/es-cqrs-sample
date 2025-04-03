@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17.4
+    container_name: postgres_es_cqrs_ocoda
+    restart: always
+    ports:
+      - 5436:5432
+    volumes:
+      - postgres_data_es_cqrs_ocoda:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ocoda
+
+volumes:
+  postgres_data_es_cqrs_ocoda:

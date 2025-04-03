@@ -1,0 +1,66 @@
+## Command Part
+
+### Register a book
+POST http://localhost:3000/api/v1/books/commands/register
+Content-Type: application/json
+
+{
+  "title": "The Lord of the Rings",
+  "author": "J.R.R. Tolkien",
+  "isbn": "978-3-16-148410-0"
+}
+
+> {%
+    client.global.set("bookId", response.body.bookId);
+%}
+
+### Borrow a book
+POST http://localhost:3000/api/v1/books/commands/borrow
+Content-Type: application/json
+
+{
+  "bookId": "{{bookId}}",
+  "readerId": "reader-123"
+}
+
+### Return a book
+POST http://localhost:3000/api/v1/books/commands/return
+Content-Type: application/json
+
+{
+  "bookId": "{{bookId}}",
+  "condition": "BAD"
+}
+
+### Repair a book
+POST http://localhost:3000/api/v1/books/commands/repair
+Content-Type: application/json
+
+{
+  "bookId": "{{bookId}}",
+  "comment": "Page pinned"
+}
+
+### Remove a book
+POST http://localhost:3000/api/v1/books/commands/remove
+Content-Type: application/json
+
+{
+  "bookId": "{{bookId}}",
+  "reason": "Book is unrepairable"
+}
+
+### Replay the last event
+POST http://localhost:3000/api/v1/books/commands/replay/{{bookId}}?revision=99
+
+
+### Query a book
+GET http://localhost:3000/api/v1/books/queries/{{bookId}}
+
+### Get a book state
+GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}
+
+### Get a book state on Revision 2
+GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}?revision=2
+
+
