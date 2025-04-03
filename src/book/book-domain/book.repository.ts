@@ -53,6 +53,14 @@ export class BookRepository {
     return bookAggregate;
   }
 
+  async getEvents(bookId: Id, revision?: number) {
+    const eventStream = EventStream.for<BookAggregate>(BookAggregate, bookId);
+    return this.eventStore.getEvents(eventStream, {
+      fromVersion: 0,
+      limit: revision,
+    });
+  }
+
   async save(bookAggregate: BookAggregate): Promise<void> {
     const events = bookAggregate.commit();
     const stream = EventStream.for<BookAggregate>(

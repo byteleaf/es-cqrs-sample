@@ -14,6 +14,7 @@ import { BookRepairedEvent } from '../book-domain/events/book-repaired.event';
 import { BookRemovedEvent } from '../book-domain/events/book-removed.event';
 import { Condition } from '../book-domain/enums/condition.enum';
 import { BookEventTypes } from '../book-domain/enums/book-event-types.enum';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @EventSubscriber(
   BookRegisteredEvent,
@@ -28,6 +29,7 @@ export class BookProjector implements IEventSubscriber {
 
   constructor(private prismaService: PrismaService) {}
 
+  @OnEvent('book.*')
   async handle(envelope: EventEnvelope) {
     this.logger.log(`Received BookRegisteredEvent: ${envelope.event}`);
     await this.applyEvent(envelope);
@@ -39,6 +41,7 @@ export class BookProjector implements IEventSubscriber {
 
     switch (event) {
       case BookEventTypes.BookRegistered:
+        this.logger.debug('Apply book registered event');
         const { title, author, isbn } = data as {
           title: string;
           author: string;
@@ -62,12 +65,14 @@ export class BookProjector implements IEventSubscriber {
         });
         break;
       case BookEventTypes.BookBorrowed:
+        this.logger.debug('Apply book borrowed event');
         await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.BORROWED },
         });
         break;
       case BookEventTypes.BookReturned:
+        this.logger.debug('Apply book returned event');
         const { condition } = data as { condition: Condition };
         await this.prismaService.book.update({
           where: { bookId },
@@ -80,18 +85,21 @@ export class BookProjector implements IEventSubscriber {
         });
         break;
       case BookEventTypes.BookDamaged:
+        this.logger.debug('Apply book damaged event');
         await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.DAMAGED },
         });
         break;
       case BookEventTypes.BookRepaired:
+        this.logger.debug('Apply book repaired event');
         await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.AVAILABLE },
         });
         break;
       case BookEventTypes.BookRemoved:
+        this.logger.debug('Apply book removed event');
         await this.prismaService.book.update({
           where: { bookId },
           data: { status: BookStatus.REMOVED },

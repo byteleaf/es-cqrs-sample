@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterBookCommand } from './commands/register-book.command';
 import { BorrowBookCommand } from './commands/borrow-book.command';
@@ -6,6 +6,7 @@ import { ReturnBookCommand } from './commands/return-book.command';
 import { RepairBookCommand } from './commands/repair-book.command';
 import { RemoveBookCommand } from './commands/remove-book.command';
 import { CommandBus } from '@ocoda/event-sourcing';
+import { ReplayBookCommand } from './commands/replay-book.command';
 
 @ApiTags('commands')
 @Controller('v1/books/commands')
@@ -47,5 +48,20 @@ export class BookCommandController {
   @HttpCode(204)
   async removeBook(@Body() removeBookCommand: RemoveBookCommand) {
     await this.commandBus.execute<RemoveBookCommand>(removeBookCommand);
+  }
+
+  @ApiOperation({ summary: 'Replay all events of a book' })
+  @Post('replay/:id')
+  @HttpCode(204)
+  async replayEvents(
+    @Param('id') bookId: string,
+    @Query('revision') revision?: number,
+  ) {
+    const replayBookCommand: ReplayBookCommand = new ReplayBookCommand(
+      bookId,
+      revision,
+    );
+
+    await this.commandBus.execute<ReplayBookCommand>(replayBookCommand);
   }
 }
