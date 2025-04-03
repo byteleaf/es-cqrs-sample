@@ -5,6 +5,7 @@ import { BorrowBookCommandHandler } from './commands/borrow-book.command';
 import { RemoveBookCommandHandler } from './commands/remove-book.command';
 import { RepairBookCommandHandler } from './commands/repair-book.command';
 import { ReturnBookCommandHandler } from './commands/return-book.command';
+import { ReplayBookCommandHandler } from './commands/replay-book.command';
 import { BookDomainModule } from '../book-domain/book-domain.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { BookDomainModule } from '../book-domain/book-domain.module';
     RemoveBookCommandHandler,
     RepairBookCommandHandler,
     ReturnBookCommandHandler,
+    ReplayBookCommandHandler,
   ],
   controllers: [BookCommandController],
 })

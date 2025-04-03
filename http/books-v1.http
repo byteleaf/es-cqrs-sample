@@ -51,7 +51,7 @@ Content-Type: application/json
 }
 
 ### Replay the last event
-POST http://localhost:3000/api/v1/books/commands/replay/{{bookId}}
+POST http://localhost:3000/api/v1/books/commands/replay/{{bookId}}?revision=99
 
 
 ### Query a book
@@ -61,6 +61,6 @@ GET http://localhost:3000/api/v1/books/queries/{{bookId}}
 GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}
 
 ### Get a book state on Revision 2
-GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}?revision=1
+GET http://localhost:3000/api/v1/books/queries/state/{{bookId}}?revision=5
 
 

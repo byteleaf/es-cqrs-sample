@@ -14,6 +14,7 @@ import { BookRepairedEvent } from '../book-domain/events/book-repaired.event';
 import { BookRemovedEvent } from '../book-domain/events/book-removed.event';
 import { Condition } from '../book-domain/enums/condition.enum';
 import { BookEventTypes } from '../book-domain/enums/book-event-types.enum';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @EventSubscriber(
   BookRegisteredEvent,
@@ -28,8 +29,9 @@ export class BookProjector implements IEventSubscriber {
 
   constructor(private prismaService: PrismaService) {}
 
+  @OnEvent('book.*')
   async handle(envelope: EventEnvelope) {
-    this.logger.log(`Received BookRegisteredEvent: ${envelope.event}`);
+    this.logger.log(`Received event: ${envelope.event}`);
     await this.applyEvent(envelope);
   }
 
