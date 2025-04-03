@@ -4,10 +4,11 @@ import {
   ICommand,
   ICommandHandler,
 } from '@ocoda/event-sourcing';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { BookRepository } from '../../book-domain/book.repository';
 import { BookId } from '../aggregates/book.aggregate';
 import { ApiProperty } from '@nestjs/swagger';
+import { BookStatus } from '@prisma/client';
 
 export class RepairBookCommand implements ICommand {
   @ApiProperty({ example: 'b0b4b3b4-4b4b-4b4b-4b4b-4b4b4b4b4b4b' })
@@ -30,6 +31,11 @@ export class RepairBookCommandHandler implements ICommandHandler {
     if (!bookAggregate) {
       throw new NotFoundException('Book not found');
     }
+
+    if (bookAggregate.status !== BookStatus.DAMAGED) {
+      throw new ConflictException('Book not damaged');
+    }
+
     bookAggregate.repairBook(bookId, command.comment);
 
     await this.bookRepository.save(bookAggregate);

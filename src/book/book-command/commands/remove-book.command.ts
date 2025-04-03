@@ -4,10 +4,11 @@ import {
   ICommand,
   ICommandHandler,
 } from '@ocoda/event-sourcing';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { BookId } from '../aggregates/book.aggregate';
 import { BookRepository } from '../../book-domain/book.repository';
 import { ApiProperty } from '@nestjs/swagger';
+import { BookStatus } from '@prisma/client';
 
 export class RemoveBookCommand implements ICommand {
   @ApiProperty({ example: 'b0b4b3b4-4b4b-4b4b-4b4b-4b4b4b4b4b4b' })
@@ -30,6 +31,11 @@ export class RemoveBookCommandHandler implements ICommandHandler {
     if (!bookAggregate) {
       throw new NotFoundException('Book not found');
     }
+
+    if (bookAggregate.status === BookStatus.REMOVED) {
+      throw new ConflictException('Already removed');
+    }
+
     bookAggregate.removeBook(bookId, command.reason);
 
     await this.bookRepository.save(bookAggregate);
