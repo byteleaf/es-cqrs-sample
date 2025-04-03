@@ -1,5 +1,6 @@
 import { BookStatus, Event, Prisma } from '@prisma/client';
 import { BookEventTypes } from '../enums/book-event-types.enum';
+import { Condition } from '../enums/condition.enum';
 
 export type BookState = {
   id: string;
@@ -32,18 +33,18 @@ export class BookAggregate {
         };
         break;
       case BookEventTypes.BookBorrowed:
-        const { readerId } = event.data as Prisma.JsonObject;
+        const { readerId } = event.data as { readerId: string };
         this.state = {
           ...this.state,
           status: BookStatus.BORROWED,
-          readerId: readerId as string, //TODO: fix type
+          readerId: readerId,
         };
         break;
       case BookEventTypes.BookReturned:
         this.state = {
           ...this.state,
           status:
-            (event.data as Prisma.JsonObject).condition === 'good'
+            (event.data as Prisma.JsonObject).condition === Condition.Good
               ? BookStatus.AVAILABLE
               : BookStatus.DAMAGED,
           readerId: null,

@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { BookStatus, Event, Prisma } from '@prisma/client';
 import { OnEvent } from '@nestjs/event-emitter';
 import { BookEventTypes } from '../book-domain/enums/book-event-types.enum';
+import { Condition } from '../book-domain/enums/condition.enum';
 
 @Injectable()
 export class BookProjector {
@@ -25,7 +26,7 @@ export class BookProjector {
           title: string;
           author: string;
           isbn: string;
-        }; // TODO: fix type
+        };
         await this.prismaService.book.upsert({
           where: { bookId: bookId },
           create: {
@@ -50,12 +51,14 @@ export class BookProjector {
         });
         break;
       case BookEventTypes.BookReturned:
-        const { condition } = data as Prisma.JsonObject;
+        const { condition } = data as { condition: Condition };
         await this.prismaService.book.update({
           where: { bookId },
           data: {
             status:
-              condition === 'good' ? BookStatus.AVAILABLE : BookStatus.DAMAGED,
+              condition === Condition.Good
+                ? BookStatus.AVAILABLE
+                : BookStatus.DAMAGED,
           },
         });
         break;

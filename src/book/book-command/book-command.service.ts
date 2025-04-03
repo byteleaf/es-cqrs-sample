@@ -138,14 +138,6 @@ export class BookCommandService {
     await this.recordAndApply(event);
   }
 
-  async getBookState(bookId: string, revision?: number) {
-    const aggregate = await this.bookEventRehydrationService.rehydrate(
-      bookId,
-      revision,
-    );
-    return aggregate.getState();
-  }
-
   async replayEvents(bookId: string, revision?: number) {
     const events = await this.eventStore.getEventsByAggregateId(
       bookId,
