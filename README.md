@@ -1,4 +1,4 @@
-# Example of Event Sourcing with  NestJS <img src="https://nestjs.com/logo-small-gradient.d792062c.svg" width="50" height="50"> + Oocda <img src="https://ocodacdn.com/image/unsafe/plain/common://ocoda_logo_gradient.svg" width="50" height="50">
+# Example of Event Sourcing with  NestJS <img src="https://nestjs.com/logo-small-gradient.d792062c.svg" width="50" height="50"> + Ocoda <img src="https://ocodacdn.com/image/unsafe/plain/common://ocoda_logo_gradient.svg" width="50" height="50">
 
 
 
@@ -8,7 +8,8 @@ Modern software systems often face the challenge of managing data consistently w
 scalability and traceability. Two architectural patterns that can help with this are event sourcing and CQRS (Command
 Query Responsibility Segregation).
 
-In this guide, we'll walk through a practical example of implementing Event Sourcing with CQRS using NestJS and Oocda, demonstrating how these patterns work together to build scalable, maintainable applications.
+In this guide, we'll walk through a practical example of implementing Event Sourcing with CQRS using NestJS and [Ocoda](https://ocoda.github.io/event-sourcing), demonstrating how these patterns work together to build scalable, maintainable applications.
+
 
 ## What is Event Sourcing (ES)? 
 
